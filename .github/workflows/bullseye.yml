@@ -1,0 +1,20 @@
+name: Build bullseye
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Debian package
+        uses: dawidd6/action-debian-package@v1
+        with:
+          os_distribution: bullseye
+          artifacts_directory: build
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: build/*.deb
