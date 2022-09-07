@@ -5,16 +5,16 @@ Reviewed-by: Dominik George <nik@naturalnet.de>
 
 --- a/configure.ac
 +++ b/configure.ac
-@@ -6,6 +6,8 @@
- AM_INIT_AUTOMAKE([1.7.2 foreign])
+@@ -7,6 +7,8 @@
  AC_CONFIG_MACRO_DIR([m4])
  AC_PROG_CC
+ AC_PROG_CXX
 +AC_SYS_LARGEFILE
 +AC_FUNC_FSEEKO
  AC_C_CONST
  AC_PROG_LIBTOOL
  
-@@ -507,6 +509,8 @@
+@@ -573,6 +575,8 @@
  ])
  
  AC_REQUIRE_AUX_FILE([tap-driver.sh])
