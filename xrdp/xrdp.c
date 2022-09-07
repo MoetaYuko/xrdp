@@ -144,7 +144,7 @@ g_xrdp_sync(long (*sync_func)(long param1, long param2), long sync_param1,
 /*****************************************************************************/
 /* Signal handler for SIGINT and SIGTERM
  * Note: only signal safe code (eg. setting wait event) should be executed in
- * this funciton. For more details see `man signal-safety`
+ * this function. For more details see `man signal-safety`
  */
 static void
 xrdp_shutdown(int sig)
@@ -158,7 +158,7 @@ xrdp_shutdown(int sig)
 /*****************************************************************************/
 /* Signal handler for SIGCHLD
  * Note: only signal safe code (eg. setting wait event) should be executed in
- * this funciton. For more details see `man signal-safety`
+ * this function. For more details see `man signal-safety`
  */
 static void
 xrdp_child(int sig)
@@ -171,7 +171,7 @@ xrdp_child(int sig)
 /*****************************************************************************/
 /* No-op signal handler.
  * Note: only signal safe code (eg. setting wait event) should be executed in
- * this funciton. For more details see `man signal-safety`
+ * this function. For more details see `man signal-safety`
  */
 static void
 xrdp_sig_no_op(int sig)
@@ -405,23 +405,17 @@ xrdp_sanity_check(void)
 #endif
 
     /* check long, int and void* sizes */
-    if (sizeof(int) != 4)
-    {
-        g_writeln("unusable int size, must be 4");
-        return 1;
-    }
+#if SIZEOF_INT != 4
+#   error unusable int size, must be 4
+#endif
 
-    if (sizeof(long) != sizeof(void *))
-    {
-        g_writeln("long size must match void* size");
-        return 1;
-    }
+#if SIZEOF_LONG != SIZEOF_VOID_P
+#   error sizeof(long) must match sizeof(void*)
+#endif
 
-    if (sizeof(long) != 4 && sizeof(long) != 8)
-    {
-        g_writeln("unusable long size, must be 4 or 8");
-        return 1;
-    }
+#if SIZEOF_LONG != 4 && SIZEOF_LONG != 8
+#   error sizeof(long), must be 4 or 8
+#endif
 
     if (sizeof(tui64) != 8)
     {

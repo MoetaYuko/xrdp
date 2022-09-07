@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -88,6 +89,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+noinst_PROGRAMS = xrdp-xrdpapi-simple$(EXEEXT)
 subdir = xrdpapi
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_append_compile_flags.m4 \
@@ -108,6 +110,7 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config_ac.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
+PROGRAMS = $(noinst_PROGRAMS)
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -137,13 +140,17 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(moduledir)"
 LTLIBRARIES = $(module_LTLIBRARIES)
-libxrdpapi_la_LIBADD =
+libxrdpapi_la_DEPENDENCIES = $(top_builddir)/common/libcommon.la
 am_libxrdpapi_la_OBJECTS = xrdpapi.lo
 libxrdpapi_la_OBJECTS = $(am_libxrdpapi_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+am_xrdp_xrdpapi_simple_OBJECTS = simple.$(OBJEXT)
+xrdp_xrdpapi_simple_OBJECTS = $(am_xrdp_xrdpapi_simple_OBJECTS)
+xrdp_xrdpapi_simple_DEPENDENCIES = libxrdpapi.la \
+	$(top_builddir)/common/libcommon.la
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -159,7 +166,7 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/xrdpapi.Plo
+am__depfiles_remade = ./$(DEPDIR)/simple.Po ./$(DEPDIR)/xrdpapi.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -179,8 +186,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libxrdpapi_la_SOURCES)
-DIST_SOURCES = $(libxrdpapi_la_SOURCES)
+SOURCES = $(libxrdpapi_la_SOURCES) $(xrdp_xrdpapi_simple_SOURCES)
+DIST_SOURCES = $(libxrdpapi_la_SOURCES) $(xrdp_xrdpapi_simple_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -222,6 +229,10 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+CXXDEPMODE = @CXXDEPMODE@
+CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -238,8 +249,11 @@ EXEEXT = @EXEEXT@
 FDKAAC_CFLAGS = @FDKAAC_CFLAGS@
 FDKAAC_LIBS = @FDKAAC_LIBS@
 FGREP = @FGREP@
+FILECMD = @FILECMD@
 FREERDP_CFLAGS = @FREERDP_CFLAGS@
 FREERDP_LIBS = @FREERDP_LIBS@
+FREETYPE2_CFLAGS = @FREETYPE2_CFLAGS@
+FREETYPE2_LIBS = @FREETYPE2_LIBS@
 FUSE_CFLAGS = @FUSE_CFLAGS@
 FUSE_LIBS = @FUSE_LIBS@
 GREP = @GREP@
@@ -294,6 +308,12 @@ TurboJpegIncDir = @TurboJpegIncDir@
 TurboJpegLibDir = @TurboJpegLibDir@
 VERSION = @VERSION@
 XMKMF = @XMKMF@
+XRDP_NVENC_CFLAGS = @XRDP_NVENC_CFLAGS@
+XRDP_NVENC_LIBS = @XRDP_NVENC_LIBS@
+XRDP_X264_CFLAGS = @XRDP_X264_CFLAGS@
+XRDP_X264_LIBS = @XRDP_X264_LIBS@
+XRDP_YAMI_CFLAGS = @XRDP_YAMI_CFLAGS@
+XRDP_YAMI_LIBS = @XRDP_YAMI_LIBS@
 X_CFLAGS = @X_CFLAGS@
 X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_LIBS = @X_LIBS@
@@ -304,6 +324,7 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -344,7 +365,9 @@ pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
+sesmanruntimedir = @sesmanruntimedir@
 sharedstatedir = @sharedstatedir@
 socketdir = @socketdir@
 srcdir = @srcdir@
@@ -370,6 +393,18 @@ module_LTLIBRARIES = \
 libxrdpapi_la_SOURCES = \
   xrdpapi.c \
   xrdpapi.h
+
+libxrdpapi_la_LIBADD = \
+  $(top_builddir)/common/libcommon.la
+
+xrdp_xrdpapi_simple_SOURCES = \
+  simple.c
+
+
+# If you change this, update the standalone build instructions in simple.c
+xrdp_xrdpapi_simple_LDADD = \
+  libxrdpapi.la \
+  $(top_builddir)/common/libcommon.la
 
 all: all-am
 
@@ -404,6 +439,15 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
+
+clean-noinstPROGRAMS:
+	@list='$(noinst_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
 
 install-moduleLTLIBRARIES: $(module_LTLIBRARIES)
 	@$(NORMAL_INSTALL)
@@ -443,12 +487,17 @@ clean-moduleLTLIBRARIES:
 libxrdpapi.la: $(libxrdpapi_la_OBJECTS) $(libxrdpapi_la_DEPENDENCIES) $(EXTRA_libxrdpapi_la_DEPENDENCIES) 
 	$(AM_V_CCLD)$(LINK) -rpath $(moduledir) $(libxrdpapi_la_OBJECTS) $(libxrdpapi_la_LIBADD) $(LIBS)
 
+xrdp-xrdpapi-simple$(EXEEXT): $(xrdp_xrdpapi_simple_OBJECTS) $(xrdp_xrdpapi_simple_DEPENDENCIES) $(EXTRA_xrdp_xrdpapi_simple_DEPENDENCIES) 
+	@rm -f xrdp-xrdpapi-simple$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(xrdp_xrdpapi_simple_OBJECTS) $(xrdp_xrdpapi_simple_LDADD) $(LIBS)
+
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
 
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/simple.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xrdpapi.Plo@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
@@ -570,7 +619,7 @@ distdir-am: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(PROGRAMS) $(LTLIBRARIES)
 installdirs:
 	for dir in "$(DESTDIR)$(moduledir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
@@ -608,10 +657,11 @@ maintainer-clean-generic:
 clean: clean-am
 
 clean-am: clean-generic clean-libtool clean-moduleLTLIBRARIES \
-	mostlyclean-am
+	clean-noinstPROGRAMS mostlyclean-am
 
 distclean: distclean-am
-		-rm -f ./$(DEPDIR)/xrdpapi.Plo
+		-rm -f ./$(DEPDIR)/simple.Po
+	-rm -f ./$(DEPDIR)/xrdpapi.Plo
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -657,7 +707,8 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-		-rm -f ./$(DEPDIR)/xrdpapi.Plo
+		-rm -f ./$(DEPDIR)/simple.Po
+	-rm -f ./$(DEPDIR)/xrdpapi.Plo
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -680,12 +731,12 @@ uninstall-am: uninstall-moduleLTLIBRARIES
 
 .PHONY: CTAGS GTAGS TAGS all all-am am--depfiles check check-am clean \
 	clean-generic clean-libtool clean-moduleLTLIBRARIES \
-	cscopelist-am ctags ctags-am distclean distclean-compile \
-	distclean-generic distclean-libtool distclean-tags distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man \
+	clean-noinstPROGRAMS cscopelist-am ctags ctags-am distclean \
+	distclean-compile distclean-generic distclean-libtool \
+	distclean-tags distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-info install-info-am install-man \
 	install-moduleLTLIBRARIES install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
 	installcheck-am installdirs maintainer-clean \

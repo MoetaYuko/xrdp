@@ -180,6 +180,10 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+CXXDEPMODE = @CXXDEPMODE@
+CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -196,8 +200,11 @@ EXEEXT = @EXEEXT@
 FDKAAC_CFLAGS = @FDKAAC_CFLAGS@
 FDKAAC_LIBS = @FDKAAC_LIBS@
 FGREP = @FGREP@
+FILECMD = @FILECMD@
 FREERDP_CFLAGS = @FREERDP_CFLAGS@
 FREERDP_LIBS = @FREERDP_LIBS@
+FREETYPE2_CFLAGS = @FREETYPE2_CFLAGS@
+FREETYPE2_LIBS = @FREETYPE2_LIBS@
 FUSE_CFLAGS = @FUSE_CFLAGS@
 FUSE_LIBS = @FUSE_LIBS@
 GREP = @GREP@
@@ -252,6 +259,12 @@ TurboJpegIncDir = @TurboJpegIncDir@
 TurboJpegLibDir = @TurboJpegLibDir@
 VERSION = @VERSION@
 XMKMF = @XMKMF@
+XRDP_NVENC_CFLAGS = @XRDP_NVENC_CFLAGS@
+XRDP_NVENC_LIBS = @XRDP_NVENC_LIBS@
+XRDP_X264_CFLAGS = @XRDP_X264_CFLAGS@
+XRDP_X264_LIBS = @XRDP_X264_LIBS@
+XRDP_YAMI_CFLAGS = @XRDP_YAMI_CFLAGS@
+XRDP_YAMI_LIBS = @XRDP_YAMI_LIBS@
 X_CFLAGS = @X_CFLAGS@
 X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_LIBS = @X_LIBS@
@@ -262,6 +275,7 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -302,7 +316,9 @@ pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
+sesmanruntimedir = @sesmanruntimedir@
 sharedstatedir = @sharedstatedir@
 socketdir = @socketdir@
 srcdir = @srcdir@
@@ -313,6 +329,8 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+@USE_FREETYPE2_FALSE@MKFV1_MAN = 
+@USE_FREETYPE2_TRUE@MKFV1_MAN = xrdp-mkfv1.8
 man_MANS = \
   xrdp-dis.1 \
   sesman.ini.5 \
@@ -323,7 +341,9 @@ man_MANS = \
   xrdp-keygen.8 \
   xrdp-sesadmin.8 \
   xrdp-sesman.8 \
-  xrdp-sesrun.8
+  xrdp-sesrun.8 \
+  xrdp-dumpfv1.8 \
+  $(MKFV1_MAN)
 
 EXTRA_DIST = $(man_MANS:=.in)
 SUBST_VARS = sed \
@@ -333,7 +353,9 @@ SUBST_VARS = sed \
    -e 's|@localstatedir[@]|$(localstatedir)|g' \
    -e 's|@sysconfdir[@]|$(sysconfdir)|g' \
    -e 's|@socketdir[@]|$(socketdir)|g' \
+   -e 's|@sesmanruntimedir[@]|$(sesmanruntimedir)|g' \
    -e 's|@xrdpconfdir[@]|$(sysconfdir)/xrdp|g' \
+   -e 's|@xrdpdatadir[@]|$(datadir)/xrdp|g' \
    -e 's|@xrdphomeurl[@]|http://www.xrdp.org/|g'
 
 subst_verbose = $(subst_verbose_@AM_V@)

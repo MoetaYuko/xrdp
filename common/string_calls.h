@@ -27,7 +27,7 @@
  * Map a character to a string value
  *
  * This structure is used by g_format_info_string() to specify the
- * string which chould be output for %'ch', where ch is a character
+ * string which could be output for %'ch', where ch is a character
  */
 struct info_string_tag
 {
@@ -51,6 +51,21 @@ struct bitmask_string
 };
 
 #define BITMASK_STRING_END_OF_LIST { 0, NULL }
+
+/**
+ * Map a bitmask to a char value
+ *
+ *
+ * This structure is used by g_bitmask_to_charstr() to specify the
+ * char for each bit in the bitmask
+ */
+struct bitmask_char
+{
+    int mask;
+    char c;
+};
+
+#define BITMASK_CHAR_END_OF_LIST { 0, '\0' }
 
 /**
  * Processes a format string for general info
@@ -117,7 +132,7 @@ g_text2bool(const char *s);
  * @param[in] src An array of strings to join. The array must be non-null.
  *      Array items may be NULL and are processed as zero length strings.
  * @param[in] src_len The number of strings to join in the src array. Must be > 0
- * @return A pointer to the begining of the joined string (ie. returns dest).
+ * @return A pointer to the beginning of the joined string (ie. returns dest).
  */
 char *
 g_strnjoin(char *dest, int dest_len, const char *joiner, const char *src[], int src_len);
@@ -158,6 +173,9 @@ g_get_display_num_from_display(const char *display_text);
 /**
  * Converts a bitmask into a string for output purposes
  *
+ * Similar to g_bitmask_to_charstr(), but tokens are strings, separated
+ * by delimiters.
+ *
  * @param bitmask Bitmask to convert
  * @param bitdefs Definitions for strings for bits
  * @param delim Delimiter to use between strings
@@ -171,22 +189,66 @@ g_get_display_num_from_display(const char *display_text);
  *       a hexadecimal constant.
  */
 int
-g_bitmask_to_str(int bitmask, const struct bitmask_string[],
+g_bitmask_to_str(int bitmask, const struct bitmask_string bitdefs[],
                  char delim, char *buff, int bufflen);
 
 /***
  * Converts a string containing a series of tokens to a bitmask.
+ *
+ * Similar to g_charstr_to_bitmask(), but tokens are strings, separated
+ * by delimiters.
+ *
  * @param str Input string
- * @param bitmask_string Array mapping tokens to bitmask values
+ * @param bitdefs Array mapping tokens to bitmask values
  * @param delim Delimiter for tokens in str
  * @param[out] unrecognised Buffer for any unrecognised tokens
  * @param unrecognised_len Length of unrecognised including '\0';
  * @return bitmask value for recognised tokens
  */
 int
-g_str_to_bitmask(const char *str, const struct bitmask_string[],
+g_str_to_bitmask(const char *str, const struct bitmask_string bitdefs[],
                  const char *delim, char *unrecognised,
                  int unrecognised_len);
+
+/**
+ * Converts a bitmask into a string for output purposes
+ *
+ * Similar to g_bitmask_to_str(), but tokens are individual characters, and
+ * there are no delimiters.
+ *
+ * @param bitmask Bitmask to convert
+ * @param bitdefs Definitions for strings for bits
+ * @param buff Output buff
+ * @param bufflen Length of buff, including terminator '`\0'
+ * @param[out] rest Any unused bits which weren't covered by bitdefs.
+ *                  May be NULL.
+ *
+ * @return Total length excluding terminator which would be written, as
+ *         in snprintf(). Can be used to check for overflow
+ *
+ * @note Any undefined bits in the bitmask are appended to the output as
+ *       a hexadecimal constant.
+ */
+int
+g_bitmask_to_charstr(int bitmask, const struct bitmask_char bitdefs[],
+                     char *buff, int bufflen, int *rest);
+
+/***
+ * Converts a string containing a series of characters to a bitmask.
+ *
+ * Similar to g_str_to_bitmask(), but tokens are individual characters, and
+ * there are no delimiters.
+ *
+ * @param str Input string
+ * @param bitdefs Array mapping tokens to bitmask values
+ * @param delim Delimiter for tokens in str
+ * @param[out] unrecognised Buffer for any unrecognised tokens
+ * @param unrecognised_len Length of unrecognised including '\0';
+ * @return bitmask value for recognised tokens
+ */
+int
+g_charstr_to_bitmask(const char *str, const struct bitmask_char bitdefs[],
+                     char *unrecognised, int unrecognised_len);
 
 int      g_strlen(const char *text);
 char    *g_strchr(const char *text, int c);

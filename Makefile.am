@@ -11,7 +11,6 @@ EXTRA_DIST = \
   astyle_config.as \
   bootstrap \
   coding_style.md \
-  fontdump \
   m4 \
   vrplayer
 
@@ -39,17 +38,25 @@ else
 RFXCODECDIR =
 endif
 
+if XRDP_ULALACA
+ULALACADIR = ulalaca
+else
+ULALACADIR =
+endif
+
 SUBDIRS = \
   common \
   vnc \
   xup \
   mc \
   $(NEUTRINORDPDIR) \
+  libipm \
   libxrdp \
   $(PAINTERDIR) \
   $(RFXCODECDIR) \
   sesman \
   xrdp \
+  fontutils \
   keygen \
   docs \
   instfiles \
@@ -57,8 +64,10 @@ SUBDIRS = \
   xrdpapi \
   pkgconfig \
   $(XRDPVRDIR) \
+  $(ULALACADIR) \
   tests \
-  tools
+  tools \
+  xorgxrdp_helper
 
 distclean-local:
 	-rm -f xrdp_configure_options.h
