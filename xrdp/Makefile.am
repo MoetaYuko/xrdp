@@ -12,16 +12,24 @@ AM_CPPFLAGS = \
   -DXRDP_SOCKET_PATH=\"${socketdir}\" \
   -I$(top_builddir) \
   -I$(top_srcdir)/common \
-  -I$(top_srcdir)/sesman/libscp \
+  -I$(top_srcdir)/libipm \
   -I$(top_srcdir)/libxrdp \
   $(IMLIB2_CFLAGS)
 
 XRDP_EXTRA_LIBS =
+XRDP_EXTRA_SOURCES =
 
 if XRDP_RFXCODEC
 AM_CPPFLAGS += -DXRDP_RFXCODEC
 AM_CPPFLAGS += -I$(top_srcdir)/librfxcodec/include
 XRDP_EXTRA_LIBS += $(top_builddir)/librfxcodec/src/.libs/librfxencode.a
+endif
+
+if XRDP_X264
+AM_CPPFLAGS += -DXRDP_X264
+AM_CPPFLAGS += $(XRDP_X264_CFLAGS)
+XRDP_EXTRA_LIBS += $(XRDP_X264_LIBS)
+XRDP_EXTRA_SOURCES += xrdp_encoder_x264.c xrdp_encoder_x264.h
 endif
 
 if XRDP_PIXMAN
@@ -58,11 +66,14 @@ xrdp_SOURCES = \
   xrdp_process.c \
   xrdp_region.c \
   xrdp_types.h \
-  xrdp_wm.c
+  xrdp_wm.c \
+  xrdp_egfx.c \
+  xrdp_egfx.h \
+  $(XRDP_EXTRA_SOURCES)
 
 xrdp_LDADD = \
   $(top_builddir)/common/libcommon.la \
-  $(top_builddir)/sesman/libscp/libscp.la \
+  $(top_builddir)/libipm/libipm.la \
   $(top_builddir)/libxrdp/libxrdp.la \
   $(IMLIB2_LIBS) \
   $(XRDP_EXTRA_LIBS)
@@ -98,6 +109,9 @@ dist_xrdppkgdata_DATA = \
   xrdp24b.bmp \
   xrdp256.bmp \
   xrdp_logo.bmp \
+  xrdp_logo.png \
+  README.logo \
   sans-10.fv1 \
+  sans-18.fv1 \
   cursor0.cur \
   cursor1.cur

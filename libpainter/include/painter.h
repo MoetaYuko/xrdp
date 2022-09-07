@@ -24,20 +24,20 @@
 #define LIBPAINTER_VERSION_MICRO 0
 
 #define PT_FORMAT_a8b8g8r8 \
-    ((32 << 24) | (3 << 16) | (8 << 12) | (8 << 8) | (8 << 4) | 8)
+((32 << 24) | (3 << 16) | (8 << 12) | (8 << 8) | (8 << 4) | 8)
 #define PT_FORMAT_a8r8g8b8 \
-    ((32 << 24) | (2 << 16) | (8 << 12) | (8 << 8) | (8 << 4) | 8)
+((32 << 24) | (2 << 16) | (8 << 12) | (8 << 8) | (8 << 4) | 8)
 #define PT_FORMAT_r5g6b5 \
-    ((16 << 24) | (2 << 16) | (0 << 12) | (5 << 8) | (6 << 4) | 5)
+((16 << 24) | (2 << 16) | (0 << 12) | (5 << 8) | (6 << 4) | 5)
 #define PT_FORMAT_a1r5g5b5 \
-    ((16 << 24) | (2 << 16) | (1 << 12) | (5 << 8) | (5 << 4) | 5)
+((16 << 24) | (2 << 16) | (1 << 12) | (5 << 8) | (5 << 4) | 5)
 #define PT_FORMAT_r3g3b2 \
-    ((8 << 24) | (2 << 16) | (0 << 12) | (3 << 8) | (3 << 4) | 2)
+((8 << 24) | (2 << 16) | (0 << 12) | (3 << 8) | (3 << 4) | 2)
 
 #define PT_FORMAT_c1 \
-    ((1 << 24) | (4 << 16) | (0 << 12) | (0 << 8) | (0 << 4) | 0)
+((1 << 24) | (4 << 16) | (0 << 12) | (0 << 8) | (0 << 4) | 0)
 #define PT_FORMAT_c8 \
-    ((8 << 24) | (4 << 16) | (0 << 12) | (0 << 8) | (0 << 4) | 0)
+((8 << 24) | (4 << 16) | (0 << 12) | (0 << 8) | (0 << 4) | 0)
 
 struct painter_bitmap
 {
@@ -58,8 +58,8 @@ struct painter_bitmap
 
 #define PT_LINE_FLAGS_NONE 0
 
-/* reverse  Windows     X11 */
-/* polish */
+                         /* reverse  Windows     X11 */
+                         /* polish */
 #define PT_ROP_0    0x00 /* 0        BLACKNESS   GXclear        */
 #define PT_ROP_DSon 0x11 /* DSon     NOTSRCERASE GXnor          */
 #define PT_ROP_DSna 0x22 /* DSna                 GXandInverted  */

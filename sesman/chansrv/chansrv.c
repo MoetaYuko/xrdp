@@ -197,7 +197,7 @@ check_timeout(void)
     struct timeout_obj *temp_tobj;
     int count;
     tui32 now;
-
+    UNUSED_VAR(count);
     LOG_DEVEL(LOG_LEVEL_DEBUG, "check_timeout:");
     count = 0;
     tobj = g_timeout_head;
@@ -1241,18 +1241,9 @@ setup_listen(void)
         trans_delete(g_lis_trans);
     }
 
-    if (g_cfg->use_unix_socket)
-    {
-        g_lis_trans = trans_create(TRANS_MODE_UNIX, 8192, 8192);
-        g_lis_trans->is_term = g_is_term;
-        g_snprintf(port, 255, XRDP_CHANSRV_STR, g_display_num);
-    }
-    else
-    {
-        g_lis_trans = trans_create(TRANS_MODE_TCP, 8192, 8192);
-        g_lis_trans->is_term = g_is_term;
-        g_snprintf(port, 255, "%d", 7200 + g_display_num);
-    }
+    g_lis_trans = trans_create(TRANS_MODE_UNIX, 8192, 8192);
+    g_lis_trans->is_term = g_is_term;
+    g_snprintf(port, 255, XRDP_CHANSRV_STR, g_display_num);
 
     g_lis_trans->trans_conn_in = my_trans_conn_in;
     error = trans_listen(g_lis_trans, port);

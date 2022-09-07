@@ -34,38 +34,22 @@ do_rop(int rop, int src, int dst)
 {
     switch (rop)
     {
-        case PT_ROP_0:
-            return 0;
-        case PT_ROP_DSon:
-            return ~(src | dst);
-        case PT_ROP_DSna:
-            return (~src) & dst;
-        case PT_ROP_Sn:
-            return ~src;
-        case PT_ROP_SDna:
-            return src & (~dst);
-        case PT_ROP_Dn:
-            return ~(dst);
-        case PT_ROP_DSx:
-            return src ^ dst;
-        case PT_ROP_DSan:
-            return ~(src & dst);
-        case PT_ROP_DSa:
-            return src & dst;
-        case PT_ROP_DSxn:
-            return ~(src) ^ dst;
-        case PT_ROP_D:
-            return dst;
-        case PT_ROP_DSno:
-            return (~src) | dst;
-        case PT_ROP_S:
-            return src;
-        case PT_ROP_SDno:
-            return src | (~dst);
-        case PT_ROP_DSo:
-            return src | dst;
-        case PT_ROP_1:
-            return ~0;
+        case PT_ROP_0:    return 0;
+        case PT_ROP_DSon: return ~(src | dst);
+        case PT_ROP_DSna: return (~src) & dst;
+        case PT_ROP_Sn:   return ~src;
+        case PT_ROP_SDna: return src & (~dst);
+        case PT_ROP_Dn:   return ~(dst);
+        case PT_ROP_DSx:  return src ^ dst;
+        case PT_ROP_DSan: return ~(src & dst);
+        case PT_ROP_DSa:  return src & dst;
+        case PT_ROP_DSxn: return ~(src) ^ dst;
+        case PT_ROP_D:    return dst;
+        case PT_ROP_DSno: return (~src) | dst;
+        case PT_ROP_S:    return src;
+        case PT_ROP_SDno: return src | (~dst);
+        case PT_ROP_DSo:  return src | dst;
+        case PT_ROP_1:    return ~0;
     }
     return dst;
 }
@@ -79,7 +63,7 @@ bitmap_get_ptr(struct painter_bitmap *bitmap, int x, int y)
     int Bpp;
 
     if ((x >= 0) && (x < bitmap->width) &&
-            (y >= 0) && (y < bitmap->height))
+        (y >= 0) && (y < bitmap->height))
     {
         bpp = bitmap->format >> 24;
         if (bpp < 8)
@@ -255,11 +239,11 @@ painter_set_pixel(struct painter *painter, struct painter_bitmap *bitmap,
                   int x, int y, int pixel, int pixel_format)
 {
     if ((painter->clip_valid == 0) ||
-            ((x >= painter->clip.x1) && (x < painter->clip.x2) &&
-             (y >= painter->clip.y1) && (y < painter->clip.y2)))
+        ((x >= painter->clip.x1) && (x < painter->clip.x2) &&
+         (y >= painter->clip.y1) && (y < painter->clip.y2)))
     {
         if ((x >= 0) && (x < bitmap->width) &&
-                (y >= 0) && (y < bitmap->height))
+            (y >= 0) && (y < bitmap->height))
         {
             pixel = pixel_convert(pixel, pixel_format, bitmap->format,
                                   painter->palette);
