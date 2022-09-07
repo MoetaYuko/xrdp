@@ -41,7 +41,8 @@ CONFIGURE_ARGS:=	--build=${DEB_BUILD_GNU_TYPE} \
 			--libexecdir=\$${prefix}/lib/${DEB_HOST_MULTIARCH} \
 			--disable-maintainer-mode \
 			--disable-dependency-tracking \
-			--with-socketdir=/run/xrdp/sockdir
+			--with-socketdir=/run/xrdp/sockdir \
+			--with-sesmanruntimedir=/run/xrdp/sesmanruntimedir
 
 ifneq (${DEB_BUILD_GNU_TYPE},${DEB_HOST_GNU_TYPE})
 CONFIGURE_ARGS+=	--host=${DEB_HOST_GNU_TYPE}
@@ -72,6 +73,8 @@ override_dh_auto_configure:
 	    --enable-opus \
 	    --enable-painter \
 	    --enable-vsock \
+	    --enable-x264 \
+	    --enable-nvenc \
 	    ${CONFIGURE_ARGS}
 	cd librfxcodec && ./configure \
 	    --disable-shared \
