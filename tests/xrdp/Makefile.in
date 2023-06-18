@@ -110,20 +110,40 @@ CONFIG_HEADER = $(top_builddir)/config_ac.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am_test_xrdp_OBJECTS = test_xrdp-test_xrdp_main.$(OBJEXT) \
+	test_xrdp-test_xrdp_egfx.$(OBJEXT) \
+	test_xrdp-test_xrdp_region.$(OBJEXT) \
 	test_xrdp-test_bitmap_load.$(OBJEXT)
 test_xrdp_OBJECTS = $(am_test_xrdp_OBJECTS)
 am__DEPENDENCIES_1 =
 test_xrdp_DEPENDENCIES = $(top_builddir)/xrdp/xrdp_bitmap_load.o \
 	$(top_builddir)/xrdp/xrdp_bitmap_common.o \
 	$(top_builddir)/xrdp/funcs.o \
-	$(top_builddir)/common/libcommon.la $(am__DEPENDENCIES_1)
+	$(top_builddir)/common/libcommon.la \
+	$(top_builddir)/libipm/libipm.la \
+	$(top_builddir)/libxrdp/libxrdp.la \
+	$(top_builddir)/libpainter/src/libpainter.la \
+	$(top_builddir)/librfxcodec/src/librfxencode.la \
+	$(top_builddir)/xrdp/lang.o $(top_builddir)/xrdp/xrdp_mm.o \
+	$(top_builddir)/xrdp/xrdp_wm.o \
+	$(top_builddir)/xrdp/xrdp_font.o \
+	$(top_builddir)/xrdp/xrdp_egfx.o \
+	$(top_builddir)/xrdp/xrdp_cache.o \
+	$(top_builddir)/xrdp/xrdp_region.o \
+	$(top_builddir)/xrdp/xrdp_listen.o \
+	$(top_builddir)/xrdp/xrdp_bitmap.o \
+	$(top_builddir)/xrdp/xrdp_painter.o \
+	$(top_builddir)/xrdp/xrdp_encoder.o \
+	$(top_builddir)/xrdp/xrdp_process.o \
+	$(top_builddir)/xrdp/xrdp_login_wnd.o \
+	$(top_builddir)/xrdp/xrdp_main_utils.o $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
 test_xrdp_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(test_xrdp_CFLAGS) \
-	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+	$(CFLAGS) $(test_xrdp_LDFLAGS) $(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -140,7 +160,9 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/test_xrdp-test_bitmap_load.Po \
-	./$(DEPDIR)/test_xrdp-test_xrdp_main.Po
+	./$(DEPDIR)/test_xrdp-test_xrdp_egfx.Po \
+	./$(DEPDIR)/test_xrdp-test_xrdp_main.Po \
+	./$(DEPDIR)/test_xrdp-test_xrdp_region.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -395,6 +417,8 @@ ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
+AUTHMOD_LIB = @AUTHMOD_LIB@
+AUTHMOD_OBJ = @AUTHMOD_OBJ@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -404,10 +428,16 @@ CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CHECK_CFLAGS = @CHECK_CFLAGS@
 CHECK_LIBS = @CHECK_LIBS@
+CMOCKA_CFLAGS = @CMOCKA_CFLAGS@
+CMOCKA_LIBS = @CMOCKA_LIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+CXXDEPMODE = @CXXDEPMODE@
+CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -427,6 +457,8 @@ FGREP = @FGREP@
 FILECMD = @FILECMD@
 FREERDP_CFLAGS = @FREERDP_CFLAGS@
 FREERDP_LIBS = @FREERDP_LIBS@
+FREETYPE2_CFLAGS = @FREETYPE2_CFLAGS@
+FREETYPE2_LIBS = @FREETYPE2_LIBS@
 FUSE_CFLAGS = @FUSE_CFLAGS@
 FUSE_LIBS = @FUSE_LIBS@
 GREP = @GREP@
@@ -481,6 +513,12 @@ TurboJpegIncDir = @TurboJpegIncDir@
 TurboJpegLibDir = @TurboJpegLibDir@
 VERSION = @VERSION@
 XMKMF = @XMKMF@
+XRDP_NVENC_CFLAGS = @XRDP_NVENC_CFLAGS@
+XRDP_NVENC_LIBS = @XRDP_NVENC_LIBS@
+XRDP_X264_CFLAGS = @XRDP_X264_CFLAGS@
+XRDP_X264_LIBS = @XRDP_X264_LIBS@
+XRDP_YAMI_CFLAGS = @XRDP_YAMI_CFLAGS@
+XRDP_YAMI_LIBS = @XRDP_YAMI_LIBS@
 X_CFLAGS = @X_CFLAGS@
 X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_LIBS = @X_LIBS@
@@ -491,6 +529,7 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -526,6 +565,7 @@ mandir = @mandir@
 mkdir_p = @mkdir_p@
 moduledir = @moduledir@
 oldincludedir = @oldincludedir@
+pamconfdir = @pamconfdir@
 pdfdir = @pdfdir@
 pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
@@ -533,6 +573,7 @@ program_transform_name = @program_transform_name@
 psdir = @psdir@
 runstatedir = @runstatedir@
 sbindir = @sbindir@
+sesmanruntimedir = @sesmanruntimedir@
 sharedstatedir = @sharedstatedir@
 socketdir = @socketdir@
 srcdir = @srcdir@
@@ -566,19 +607,45 @@ EXTRA_DIST = \
 test_xrdp_SOURCES = \
     test_xrdp.h \
     test_xrdp_main.c \
+    test_xrdp_egfx.c \
+    test_xrdp_region.c \
     test_bitmap_load.c
 
 test_xrdp_CFLAGS = \
     -D IMAGEDIR=\"$(srcdir)\" \
-    @CHECK_CFLAGS@
+    @CHECK_CFLAGS@ \
+    @CMOCKA_CFLAGS@
+
+test_xrdp_LDFLAGS = -Wl,--wrap=pixman_region_extents, \
+    -Wl,--wrap=pixman_region_not_empty
 
 test_xrdp_LDADD = \
     $(top_builddir)/xrdp/xrdp_bitmap_load.o \
     $(top_builddir)/xrdp/xrdp_bitmap_common.o \
     $(top_builddir)/xrdp/funcs.o \
     $(top_builddir)/common/libcommon.la \
+    $(top_builddir)/libipm/libipm.la \
+    $(top_builddir)/libxrdp/libxrdp.la \
+    $(top_builddir)/libpainter/src/libpainter.la \
+    $(top_builddir)/librfxcodec/src/librfxencode.la \
+    $(top_builddir)/xrdp/lang.o \
+    $(top_builddir)/xrdp/xrdp_mm.o \
+    $(top_builddir)/xrdp/xrdp_wm.o \
+    $(top_builddir)/xrdp/xrdp_font.o \
+    $(top_builddir)/xrdp/xrdp_egfx.o \
+    $(top_builddir)/xrdp/xrdp_cache.o \
+    $(top_builddir)/xrdp/xrdp_region.o \
+    $(top_builddir)/xrdp/xrdp_listen.o \
+    $(top_builddir)/xrdp/xrdp_bitmap.o \
+    $(top_builddir)/xrdp/xrdp_painter.o \
+    $(top_builddir)/xrdp/xrdp_encoder.o \
+    $(top_builddir)/xrdp/xrdp_process.o \
+    $(top_builddir)/xrdp/xrdp_login_wnd.o \
+    $(top_builddir)/xrdp/xrdp_main_utils.o \
+    $(PIXMAN_LIBS) \
     $(IMLIB2_LIBS) \
-    @CHECK_LIBS@
+    @CHECK_LIBS@ \
+    @CMOCKA_LIBS@
 
 all: all-am
 
@@ -634,7 +701,9 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_xrdp-test_bitmap_load.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_xrdp-test_xrdp_egfx.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_xrdp-test_xrdp_main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_xrdp-test_xrdp_region.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -676,6 +745,34 @@ test_xrdp-test_xrdp_main.obj: test_xrdp_main.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_xrdp_main.c' object='test_xrdp-test_xrdp_main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_xrdp_CFLAGS) $(CFLAGS) -c -o test_xrdp-test_xrdp_main.obj `if test -f 'test_xrdp_main.c'; then $(CYGPATH_W) 'test_xrdp_main.c'; else $(CYGPATH_W) '$(srcdir)/test_xrdp_main.c'; fi`
+
+test_xrdp-test_xrdp_egfx.o: test_xrdp_egfx.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_xrdp_CFLAGS) $(CFLAGS) -MT test_xrdp-test_xrdp_egfx.o -MD -MP -MF $(DEPDIR)/test_xrdp-test_xrdp_egfx.Tpo -c -o test_xrdp-test_xrdp_egfx.o `test -f 'test_xrdp_egfx.c' || echo '$(srcdir)/'`test_xrdp_egfx.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_xrdp-test_xrdp_egfx.Tpo $(DEPDIR)/test_xrdp-test_xrdp_egfx.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_xrdp_egfx.c' object='test_xrdp-test_xrdp_egfx.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_xrdp_CFLAGS) $(CFLAGS) -c -o test_xrdp-test_xrdp_egfx.o `test -f 'test_xrdp_egfx.c' || echo '$(srcdir)/'`test_xrdp_egfx.c
+
+test_xrdp-test_xrdp_egfx.obj: test_xrdp_egfx.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_xrdp_CFLAGS) $(CFLAGS) -MT test_xrdp-test_xrdp_egfx.obj -MD -MP -MF $(DEPDIR)/test_xrdp-test_xrdp_egfx.Tpo -c -o test_xrdp-test_xrdp_egfx.obj `if test -f 'test_xrdp_egfx.c'; then $(CYGPATH_W) 'test_xrdp_egfx.c'; else $(CYGPATH_W) '$(srcdir)/test_xrdp_egfx.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_xrdp-test_xrdp_egfx.Tpo $(DEPDIR)/test_xrdp-test_xrdp_egfx.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_xrdp_egfx.c' object='test_xrdp-test_xrdp_egfx.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_xrdp_CFLAGS) $(CFLAGS) -c -o test_xrdp-test_xrdp_egfx.obj `if test -f 'test_xrdp_egfx.c'; then $(CYGPATH_W) 'test_xrdp_egfx.c'; else $(CYGPATH_W) '$(srcdir)/test_xrdp_egfx.c'; fi`
+
+test_xrdp-test_xrdp_region.o: test_xrdp_region.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_xrdp_CFLAGS) $(CFLAGS) -MT test_xrdp-test_xrdp_region.o -MD -MP -MF $(DEPDIR)/test_xrdp-test_xrdp_region.Tpo -c -o test_xrdp-test_xrdp_region.o `test -f 'test_xrdp_region.c' || echo '$(srcdir)/'`test_xrdp_region.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_xrdp-test_xrdp_region.Tpo $(DEPDIR)/test_xrdp-test_xrdp_region.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_xrdp_region.c' object='test_xrdp-test_xrdp_region.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_xrdp_CFLAGS) $(CFLAGS) -c -o test_xrdp-test_xrdp_region.o `test -f 'test_xrdp_region.c' || echo '$(srcdir)/'`test_xrdp_region.c
+
+test_xrdp-test_xrdp_region.obj: test_xrdp_region.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_xrdp_CFLAGS) $(CFLAGS) -MT test_xrdp-test_xrdp_region.obj -MD -MP -MF $(DEPDIR)/test_xrdp-test_xrdp_region.Tpo -c -o test_xrdp-test_xrdp_region.obj `if test -f 'test_xrdp_region.c'; then $(CYGPATH_W) 'test_xrdp_region.c'; else $(CYGPATH_W) '$(srcdir)/test_xrdp_region.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_xrdp-test_xrdp_region.Tpo $(DEPDIR)/test_xrdp-test_xrdp_region.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_xrdp_region.c' object='test_xrdp-test_xrdp_region.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_xrdp_CFLAGS) $(CFLAGS) -c -o test_xrdp-test_xrdp_region.obj `if test -f 'test_xrdp_region.c'; then $(CYGPATH_W) 'test_xrdp_region.c'; else $(CYGPATH_W) '$(srcdir)/test_xrdp_region.c'; fi`
 
 test_xrdp-test_bitmap_load.o: test_bitmap_load.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_xrdp_CFLAGS) $(CFLAGS) -MT test_xrdp-test_bitmap_load.o -MD -MP -MF $(DEPDIR)/test_xrdp-test_bitmap_load.Tpo -c -o test_xrdp-test_bitmap_load.o `test -f 'test_bitmap_load.c' || echo '$(srcdir)/'`test_bitmap_load.c
@@ -990,7 +1087,9 @@ clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
 
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/test_xrdp-test_bitmap_load.Po
+	-rm -f ./$(DEPDIR)/test_xrdp-test_xrdp_egfx.Po
 	-rm -f ./$(DEPDIR)/test_xrdp-test_xrdp_main.Po
+	-rm -f ./$(DEPDIR)/test_xrdp-test_xrdp_region.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -1037,7 +1136,9 @@ installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/test_xrdp-test_bitmap_load.Po
+	-rm -f ./$(DEPDIR)/test_xrdp-test_xrdp_egfx.Po
 	-rm -f ./$(DEPDIR)/test_xrdp-test_xrdp_main.Po
+	-rm -f ./$(DEPDIR)/test_xrdp-test_xrdp_region.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

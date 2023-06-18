@@ -170,7 +170,7 @@ xrdp_listen_get_startup_params(struct xrdp_listen *self)
     startup_params = self->startup_params;
     port_override = startup_params->port[0] != 0;
     fork_override = startup_params->fork;
-    fd = g_file_open(startup_params->xrdp_ini);
+    fd = g_file_open_ro(startup_params->xrdp_ini);
     if (fd != -1)
     {
         names = list_create();
@@ -875,7 +875,7 @@ xrdp_listen_main_loop(struct xrdp_listen *self)
         self->status = -1;
         return 1;
     }
-    term_obj = g_get_term_event(); /*Global termination event */
+    term_obj = g_get_term(); /*Global termination event */
     sync_obj = g_get_sync_event();
     done_obj = self->pro_done_event;
     cont = 1;

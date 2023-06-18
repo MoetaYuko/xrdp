@@ -163,9 +163,10 @@ am__define_uniq_tagged_files = \
   unique=`for i in $$list; do \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
-DIST_SUBDIRS = common vnc xup mc neutrinordp libxrdp libpainter \
-	librfxcodec sesman xrdp keygen docs instfiles genkeymap \
-	xrdpapi pkgconfig xrdpvr tests tools
+DIST_SUBDIRS = third_party third_party/tomlc99 common vnc xup mc \
+	neutrinordp libipm libxrdp libpainter librfxcodec sesman xrdp \
+	fontutils keygen waitforx docs instfiles genkeymap xrdpapi \
+	pkgconfig xrdpvr ulalaca tests tools xorgxrdp_helper
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config_ac-h.in \
 	COPYING NEWS.md README.md compile config.guess config.sub \
 	install-sh ltmain.sh missing tap-driver.sh
@@ -217,6 +218,8 @@ ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
+AUTHMOD_LIB = @AUTHMOD_LIB@
+AUTHMOD_OBJ = @AUTHMOD_OBJ@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -226,10 +229,16 @@ CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CHECK_CFLAGS = @CHECK_CFLAGS@
 CHECK_LIBS = @CHECK_LIBS@
+CMOCKA_CFLAGS = @CMOCKA_CFLAGS@
+CMOCKA_LIBS = @CMOCKA_LIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+CXXDEPMODE = @CXXDEPMODE@
+CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -249,6 +258,8 @@ FGREP = @FGREP@
 FILECMD = @FILECMD@
 FREERDP_CFLAGS = @FREERDP_CFLAGS@
 FREERDP_LIBS = @FREERDP_LIBS@
+FREETYPE2_CFLAGS = @FREETYPE2_CFLAGS@
+FREETYPE2_LIBS = @FREETYPE2_LIBS@
 FUSE_CFLAGS = @FUSE_CFLAGS@
 FUSE_LIBS = @FUSE_LIBS@
 GREP = @GREP@
@@ -303,6 +314,12 @@ TurboJpegIncDir = @TurboJpegIncDir@
 TurboJpegLibDir = @TurboJpegLibDir@
 VERSION = @VERSION@
 XMKMF = @XMKMF@
+XRDP_NVENC_CFLAGS = @XRDP_NVENC_CFLAGS@
+XRDP_NVENC_LIBS = @XRDP_NVENC_LIBS@
+XRDP_X264_CFLAGS = @XRDP_X264_CFLAGS@
+XRDP_X264_LIBS = @XRDP_X264_LIBS@
+XRDP_YAMI_CFLAGS = @XRDP_YAMI_CFLAGS@
+XRDP_YAMI_LIBS = @XRDP_YAMI_LIBS@
 X_CFLAGS = @X_CFLAGS@
 X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_LIBS = @X_LIBS@
@@ -313,6 +330,7 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -348,6 +366,7 @@ mandir = @mandir@
 mkdir_p = @mkdir_p@
 moduledir = @moduledir@
 oldincludedir = @oldincludedir@
+pamconfdir = @pamconfdir@
 pdfdir = @pdfdir@
 pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
@@ -355,6 +374,7 @@ program_transform_name = @program_transform_name@
 psdir = @psdir@
 runstatedir = @runstatedir@
 sbindir = @sbindir@
+sesmanruntimedir = @sesmanruntimedir@
 sharedstatedir = @sharedstatedir@
 socketdir = @socketdir@
 srcdir = @srcdir@
@@ -378,7 +398,6 @@ EXTRA_DIST = \
   astyle_config.as \
   bootstrap \
   coding_style.md \
-  fontdump \
   m4 \
   vrplayer
 
@@ -390,26 +409,37 @@ EXTRA_DIST = \
 @XRDP_PAINTER_TRUE@PAINTERDIR = libpainter
 @XRDP_RFXCODEC_FALSE@RFXCODECDIR = 
 @XRDP_RFXCODEC_TRUE@RFXCODECDIR = librfxcodec
+@XRDP_ULALACA_FALSE@ULALACADIR = 
+@XRDP_ULALACA_TRUE@ULALACADIR = ulalaca
+
+# This should not be dictionary order but build order
 SUBDIRS = \
+  third_party \
+  third_party/tomlc99 \
   common \
   vnc \
   xup \
   mc \
   $(NEUTRINORDPDIR) \
+  libipm \
   libxrdp \
   $(PAINTERDIR) \
   $(RFXCODECDIR) \
   sesman \
   xrdp \
+  fontutils \
   keygen \
+  waitforx \
   docs \
   instfiles \
   genkeymap \
   xrdpapi \
   pkgconfig \
   $(XRDPVRDIR) \
+  $(ULALACADIR) \
   tests \
-  tools
+  tools \
+  xorgxrdp_helper
 
 all: config_ac.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive

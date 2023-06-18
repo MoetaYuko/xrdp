@@ -25,6 +25,7 @@
 
 #include <limits.h>
 
+#include "guid.h"
 #include "libxrdp.h"
 #include "ms-rdpbcgr.h"
 #include "ms-rdperp.h"
@@ -45,7 +46,8 @@ static int
 xrdp_caps_send_monitorlayout(struct xrdp_rdp *self)
 {
     struct stream *s;
-    int i;
+    uint32_t i;
+    struct display_size_description *description;
 
     make_stream(s);
     init_stream(s, 8192);
@@ -56,16 +58,18 @@ xrdp_caps_send_monitorlayout(struct xrdp_rdp *self)
         return 1;
     }
 
-    out_uint32_le(s, self->client_info.monitorCount); /* monitorCount (4 bytes) */
+    description = &self->client_info.display_sizes;
+
+    out_uint32_le(s, description->monitorCount); /* monitorCount (4 bytes) */
 
     /* TODO: validate for allowed monitors in terminal server (maybe by config?) */
-    for (i = 0; i < self->client_info.monitorCount; i++)
+    for (i = 0; i < description->monitorCount; i++)
     {
-        out_uint32_le(s, self->client_info.minfo[i].left);
-        out_uint32_le(s, self->client_info.minfo[i].top);
-        out_uint32_le(s, self->client_info.minfo[i].right);
-        out_uint32_le(s, self->client_info.minfo[i].bottom);
-        out_uint32_le(s, self->client_info.minfo[i].is_primary);
+        out_uint32_le(s, description->minfo[i].left);
+        out_uint32_le(s, description->minfo[i].top);
+        out_uint32_le(s, description->minfo[i].right);
+        out_uint32_le(s, description->minfo[i].bottom);
+        out_uint32_le(s, description->minfo[i].is_primary);
     }
 
     s_mark_end(s);
@@ -518,6 +522,10 @@ xrdp_caps_process_codecs(struct xrdp_rdp *self, struct stream *s, int len)
     int i1;
     char *codec_guid;
     char *next_guid;
+    struct guid guid;
+    char codec_guid_str[GUID_STR_SIZE];
+
+    guid_clear(&guid);
 
     if (len < 1)
     {
@@ -530,6 +538,10 @@ xrdp_caps_process_codecs(struct xrdp_rdp *self, struct stream *s, int len)
     for (index = 0; index < codec_count; index++)
     {
         codec_guid = s->p;
+
+        g_memcpy(guid.g, s->p, GUID_SIZE);
+        guid_to_str(&guid, codec_guid_str);
+
         if (len < 16 + 1 + 2)
         {
             LOG(LOG_LEVEL_ERROR, "xrdp_caps_process_codecs: error");
@@ -549,8 +561,8 @@ xrdp_caps_process_codecs(struct xrdp_rdp *self, struct stream *s, int len)
 
         if (g_memcmp(codec_guid, XR_CODEC_GUID_NSCODEC, 16) == 0)
         {
-            LOG(LOG_LEVEL_INFO, "xrdp_caps_process_codecs: nscodec, codec id %d, properties len %d",
-                codec_id, codec_properties_length);
+            LOG(LOG_LEVEL_INFO, "xrdp_caps_process_codecs: NSCodec(%s), codec id [%d], properties len [%d]",
+                codec_guid_str, codec_id, codec_properties_length);
             self->client_info.ns_codec_id = codec_id;
             i1 = MIN(64, codec_properties_length);
             g_memcpy(self->client_info.ns_prop, s->p, i1);
@@ -558,8 +570,8 @@ xrdp_caps_process_codecs(struct xrdp_rdp *self, struct stream *s, int len)
         }
         else if (g_memcmp(codec_guid, XR_CODEC_GUID_REMOTEFX, 16) == 0)
         {
-            LOG(LOG_LEVEL_INFO, "xrdp_caps_process_codecs: RemoteFX, codec id %d, properties len %d",
-                codec_id, codec_properties_length);
+            LOG(LOG_LEVEL_INFO, "xrdp_caps_process_codecs: RemoteFX(%s), codec id [%d], properties len [%d]",
+                codec_guid_str, codec_id, codec_properties_length);
             self->client_info.rfx_codec_id = codec_id;
             i1 = MIN(64, codec_properties_length);
             g_memcpy(self->client_info.rfx_prop, s->p, i1);
@@ -567,8 +579,8 @@ xrdp_caps_process_codecs(struct xrdp_rdp *self, struct stream *s, int len)
         }
         else if (g_memcmp(codec_guid, XR_CODEC_GUID_JPEG, 16) == 0)
         {
-            LOG(LOG_LEVEL_INFO, "xrdp_caps_process_codecs: jpeg, codec id %d, properties len %d",
-                codec_id, codec_properties_length);
+            LOG(LOG_LEVEL_INFO, "xrdp_caps_process_codecs: JPEG(%s), codec id [%d], properties len [%d]",
+                codec_guid_str, codec_id, codec_properties_length);
             self->client_info.jpeg_codec_id = codec_id;
             i1 = MIN(64, codec_properties_length);
             g_memcpy(self->client_info.jpeg_prop, s->p, i1);
@@ -584,8 +596,8 @@ xrdp_caps_process_codecs(struct xrdp_rdp *self, struct stream *s, int len)
         }
         else if (g_memcmp(codec_guid, XR_CODEC_GUID_H264, 16) == 0)
         {
-            LOG(LOG_LEVEL_INFO, "xrdp_caps_process_codecs: h264, codec id %d, properties len %d",
-                codec_id, codec_properties_length);
+            LOG(LOG_LEVEL_INFO, "xrdp_caps_process_codecs: H264(%s), codec id [%d], properties len [%d]",
+                codec_guid_str, codec_id, codec_properties_length);
             self->client_info.h264_codec_id = codec_id;
             i1 = MIN(64, codec_properties_length);
             g_memcpy(self->client_info.h264_prop, s->p, i1);
@@ -593,7 +605,8 @@ xrdp_caps_process_codecs(struct xrdp_rdp *self, struct stream *s, int len)
         }
         else
         {
-            LOG(LOG_LEVEL_WARNING, "xrdp_caps_process_codecs: unknown codec id %d", codec_id);
+            LOG(LOG_LEVEL_WARNING, "xrdp_caps_process_codecs: unknown(%s), codec id [%d], properties len [%d]",
+                codec_guid_str, codec_id, codec_properties_length);
         }
 
         s->p = next_guid;
@@ -614,6 +627,18 @@ xrdp_caps_process_multifragmentupdate(struct xrdp_rdp *self, struct stream *s,
     {
         self->client_info.max_fastpath_frag_bytes = MaxRequestSize;
     }
+    return 0;
+}
+
+/*****************************************************************************/
+static int
+xrdp_caps_process_largepointer(struct xrdp_rdp *self, struct stream *s,
+                               int len)
+{
+    int largePointerSupportFlags;
+
+    in_uint16_le(s, largePointerSupportFlags);
+    self->client_info.large_pointer_support_flags = largePointerSupportFlags;
     return 0;
 }
 
@@ -833,6 +858,11 @@ xrdp_caps_process_confirm_active(struct xrdp_rdp *self, struct stream *s)
                           "capabilitySetType = CAPSSETTYPE_MULTIFRAGMENTUPDATE");
                 xrdp_caps_process_multifragmentupdate(self, s, len);
                 break;
+            case CAPSETTYPE_LARGE_POINTER:
+                LOG_DEVEL(LOG_LEVEL_INFO, "Received [MS-RDPBCGR] TS_CONFIRM_ACTIVE_PDU - TS_CAPS_SET "
+                          "capabilitySetType = CAPSETTYPE_LARGE_POINTER");
+                xrdp_caps_process_largepointer(self, s, len);
+                break;
             case CAPSETTYPE_SURFACE_COMMANDS:
                 LOG_DEVEL(LOG_LEVEL_INFO, "Received [MS-RDPBCGR] TS_CONFIRM_ACTIVE_PDU - TS_CAPS_SET "
                           "capabilitySetType = CAPSETTYPE_SURFACE_COMMANDS");
@@ -868,6 +898,46 @@ xrdp_caps_process_confirm_active(struct xrdp_rdp *self, struct stream *s)
         self->client_info.offscreen_cache_entries = 0;
     }
 
+    if (self->client_info.use_fast_path)
+    {
+        if ((self->client_info.large_pointer_support_flags & LARGE_POINTER_FLAG_96x96) &&
+                (self->client_info.max_fastpath_frag_bytes < 38055))
+        {
+            LOG(LOG_LEVEL_WARNING, "Client Capability: client requested "
+                "LARGE_POINTER_FLAG_96x96 but max_fastpath_frag_bytes(%d) is less then "
+                "the required size of 38055, 96x96 large cursor support disabled",
+                self->client_info.max_fastpath_frag_bytes);
+            self->client_info.large_pointer_support_flags &= ~LARGE_POINTER_FLAG_96x96;
+        }
+        if ((self->client_info.large_pointer_support_flags & LARGE_POINTER_FLAG_384x384) &&
+                (self->client_info.max_fastpath_frag_bytes < 608299))
+        {
+            LOG(LOG_LEVEL_WARNING, "Client Capability: client requested "
+                "LARGE_POINTER_FLAG_384x384 but max_fastpath_frag_bytes(%d) is less then "
+                "the required size of 608299, 384x384 large cursor support disabled",
+                self->client_info.max_fastpath_frag_bytes);
+            self->client_info.large_pointer_support_flags &= ~LARGE_POINTER_FLAG_384x384;
+        }
+    }
+    else
+    {
+        if (self->client_info.large_pointer_support_flags != 0)
+        {
+            LOG(LOG_LEVEL_WARNING, "Client Capability: client requested "
+                "large pointers but use_fast_path is false, "
+                "all large cursor support disabled");
+            self->client_info.large_pointer_support_flags = 0;
+        }
+    }
+    if (self->client_info.large_pointer_support_flags & LARGE_POINTER_FLAG_96x96)
+    {
+        LOG(LOG_LEVEL_INFO, "Client Capability: LARGE_POINTER_FLAG_96x96 supported");
+    }
+    if (self->client_info.large_pointer_support_flags & LARGE_POINTER_FLAG_384x384)
+    {
+        LOG(LOG_LEVEL_INFO, "Client Capability: LARGE_POINTER_FLAG_384x384 supported");
+    }
+
     LOG_DEVEL(LOG_LEVEL_TRACE, "Completed processing received [MS-RDPBCGR] TS_CONFIRM_ACTIVE_PDU");
     return 0;
 }
@@ -897,8 +967,8 @@ unsigned int calculate_multifragmentupdate_len(const struct xrdp_rdp *self)
 {
     unsigned int result = MAX_MULTIFRAGMENTUPDATE_SIZE;
 
-    unsigned int x_tiles = (self->client_info.width + 63) / 64;
-    unsigned int y_tiles = (self->client_info.height + 63) / 64;
+    unsigned int x_tiles = (self->client_info.display_sizes.session_width + 63) / 64;
+    unsigned int y_tiles = (self->client_info.display_sizes.session_height + 63) / 64;
 
     /* Check for overflow on calculation if bad parameters are supplied */
     if ((x_tiles * y_tiles  + 1) < (UINT_MAX / 16384))
@@ -993,8 +1063,8 @@ xrdp_caps_send_demand_active(struct xrdp_rdp *self)
     out_uint16_le(s, 1); /* Receive 1 BPP */
     out_uint16_le(s, 1); /* Receive 4 BPP */
     out_uint16_le(s, 1); /* Receive 8 BPP */
-    out_uint16_le(s, self->client_info.width); /* width */
-    out_uint16_le(s, self->client_info.height); /* height */
+    out_uint16_le(s, self->client_info.display_sizes.session_width); /* width */
+    out_uint16_le(s, self->client_info.display_sizes.session_height); /* height */
     out_uint16_le(s, 0); /* Pad */
     out_uint16_le(s, 1); /* Allow resize */
     out_uint16_le(s, 1); /* bitmap compression */
@@ -1212,6 +1282,12 @@ xrdp_caps_send_demand_active(struct xrdp_rdp *self)
         LOG_DEVEL(LOG_LEVEL_TRACE, "xrdp_caps_send_demand_active: Server Capability "
                   "CAPSSETTYPE_MULTIFRAGMENTUPDATE = %d", max_request_size);
 
+        /* large pointer 96x96 */
+        caps_count++;
+        out_uint16_le(s, CAPSETTYPE_LARGE_POINTER);
+        out_uint16_le(s, CAPSETTYPE_LARGE_POINTER_LEN);
+        out_uint16_le(s, LARGE_POINTER_FLAG_96x96);
+
         /* frame acks */
         caps_count++;
         out_uint16_le(s, CAPSTYPE_FRAME_ACKNOWLEDGE);
@@ -1256,7 +1332,7 @@ xrdp_caps_send_demand_active(struct xrdp_rdp *self)
     }
 
     /* send Monitor Layout PDU for dual monitor */
-    if (self->client_info.monitorCount > 0 &&
+    if (self->client_info.display_sizes.monitorCount > 0 &&
             self->client_info.multimon == 1)
     {
         LOG_DEVEL(LOG_LEVEL_TRACE, "xrdp_caps_send_demand_active: sending monitor layout pdu");

@@ -18,6 +18,9 @@
  * media center
  */
 
+#ifndef MC_H
+#define MC_H
+
 /* include other h files */
 #include "arch.h"
 #include "parse.h"
@@ -57,7 +60,7 @@ struct mod
     int (*server_set_cursor)(struct mod *v, int x, int y, char *data, char *mask);
     int (*server_palette)(struct mod *v, int *palette);
     int (*server_msg)(struct mod *v, const char *msg, int code);
-    int (*server_is_term)(struct mod *v);
+    int (*server_is_term)(void);
     int (*server_set_clip)(struct mod *v, int x, int y, int cx, int cy);
     int (*server_reset_clip)(struct mod *v);
     int (*server_set_fgcolor)(struct mod *v, int fgcolor);
@@ -102,3 +105,5 @@ struct mod
     int height;
     int bpp;
 };
+
+#endif // MC_H
