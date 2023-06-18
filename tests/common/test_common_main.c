@@ -3,6 +3,7 @@
 #include "config_ac.h"
 #endif
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "log.h"
@@ -45,11 +46,13 @@ int main (void)
     int number_failed;
     SRunner *sr;
 
-    sr = srunner_create (make_suite_test_string());
+    sr = srunner_create (make_suite_test_fifo());
+    srunner_add_suite(sr, make_suite_test_list());
+    srunner_add_suite(sr, make_suite_test_string());
     srunner_add_suite(sr, make_suite_test_os_calls());
     srunner_add_suite(sr, make_suite_test_ssl_calls());
     srunner_add_suite(sr, make_suite_test_base64());
-    //   srunner_add_suite(sr, make_list_suite());
+    srunner_add_suite(sr, make_suite_test_guid());
 
     srunner_set_tap(sr, "-");
     /*
@@ -57,6 +60,9 @@ int main (void)
     struct log_config *lc = log_config_init_for_console(LOG_LEVEL_INFO, NULL);
     log_start_from_param(lc);
     log_config_free(lc);
+    /* Disable stdout buffering, as this can confuse the error
+     * reporting when running in libcheck fork mode */
+    setvbuf(stdout, NULL, _IONBF, 0);
 
     /* Initialise the ssl module */
     ssl_init();

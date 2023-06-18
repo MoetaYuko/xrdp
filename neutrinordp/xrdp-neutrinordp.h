@@ -17,6 +17,9 @@
  * limitations under the License.
  */
 
+#ifndef XRDP_NEUTRINORDP_H
+#define XRDP_NEUTRINORDP_H
+
 /* include other h files */
 #include "arch.h"
 #include "parse.h"
@@ -109,7 +112,7 @@ struct mod
     int (*server_set_pointer)(struct mod *v, int x, int y, char *data, char *mask);
     int (*server_palette)(struct mod *v, int *palette);
     int (*server_msg)(struct mod *v, const char *msg, int code);
-    int (*server_is_term)(struct mod *v);
+    int (*server_is_term)(void);
     int (*server_set_clip)(struct mod *v, int x, int y, int cx, int cy);
     int (*server_reset_clip)(struct mod *v);
     int (*server_set_fgcolor)(struct mod *v, int fgcolor);
@@ -235,3 +238,5 @@ struct mod
     int allow_client_kbd_settings;
     struct kbd_overrides kbd_overrides; /* neutrinordp.overide_kbd_* values */
 };
+
+#endif // XRDP_NEUTRINORDP_H

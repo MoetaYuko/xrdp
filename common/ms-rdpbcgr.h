@@ -57,6 +57,7 @@
 #define SEC_TAG_CLI_CHANNELS           0xc003 /* CS_CHANNELS? */
 #define SEC_TAG_CLI_4                  0xc004 /* CS_CLUSTER? */
 #define SEC_TAG_CLI_MONITOR            0xc005 /* CS_MONITOR */
+#define SEC_TAG_CLI_MONITOR_EX         0xc008 /* CS_MONITOR_EX */
 
 /* Client Core Data: colorDepth, postBeta2ColorDepth (2.2.1.3.2) */
 #define RNS_UD_COLOR_4BPP              0xCA00
@@ -83,10 +84,24 @@
 #define RDPSND_SVC_CHANNEL_NAME         "rdpsnd"
 #define RDPDR_SVC_CHANNEL_NAME          "rdpdr"
 
-/* 2.2.1.3.6 Client Monitor Data - */
+/* 2.2.1.3.6 Client Monitor Data */
 /* monitorCount (4 bytes): A 32-bit, unsigned integer. The number of display */
 /* monitor definitions in the monitorDefArray field (the maximum allowed is 16). */
-#define CLIENT_MONITOR_DATA_MAXIMUM_MONITORS 16
+#define CLIENT_MONITOR_DATA_MAXIMUM_MONITORS               16
+
+/* 2.2.1.3.6 Client Monitor Data */
+/* The maximum width of the virtual desktop resulting from the union of the monitors */
+/* contained in the monitorDefArray field MUST NOT exceed 32,766 pixels. Similarly, */
+/* the maximum height of the virtual desktop resulting from the union of the monitors  */
+/* contained in the monitorDefArray field MUST NOT exceed 32,766 pixels. */
+/* The minimum permitted size of the virtual desktop is 200 x 200 pixels. */
+#define CLIENT_MONITOR_DATA_MINIMUM_VIRTUAL_DESKTOP_WIDTH  0xC8   // 200
+#define CLIENT_MONITOR_DATA_MINIMUM_VIRTUAL_DESKTOP_HEIGHT 0xC8   // 200
+#define CLIENT_MONITOR_DATA_MAXIMUM_VIRTUAL_DESKTOP_WIDTH  0x7FFE // 32766
+#define CLIENT_MONITOR_DATA_MAXIMUM_VIRTUAL_DESKTOP_HEIGHT 0x7FFE // 32766
+
+/* 2.2.1.3.6.1 Monitor Definition (TS_MONITOR_DEF) */
+#define TS_MONITOR_PRIMARY 0x00000001
 
 /* Options field */
 /* NOTE: XR_ prefixed to avoid conflict with FreeRDP */
@@ -357,11 +372,11 @@
 
 /* Bitmap Codec: codecGUID (2.2.7.2.10.1.1) */
 
-/* CODEC_GUID_NSCODEC  CA8D1BB9-000F-154F-589FAE2D1A87E2D6 */
+/* CODEC_GUID_NSCODEC  CA8D1BB9-000F-154F-589F-AE2D1A87E2D6 */
 #define XR_CODEC_GUID_NSCODEC \
     "\xb9\x1b\x8d\xca\x0f\x00\x4f\x15\x58\x9f\xae\x2d\x1a\x87\xe2\xd6"
 
-/* CODEC_GUID_REMOTEFX 76772F12-BD72-4463-AFB3B73C9C6F7886 */
+/* CODEC_GUID_REMOTEFX 76772F12-BD72-4463-AFB3-B73C9C6F7886 */
 #define XR_CODEC_GUID_REMOTEFX \
     "\x12\x2F\x77\x76\x72\xBD\x63\x44\xAF\xB3\xB7\x3C\x9C\x6F\x78\x86"
 
@@ -369,17 +384,21 @@
 #define XR_CODEC_GUID_IMAGE_REMOTEFX \
     "\xD4\xCC\x44\x27\x8A\x9D\x74\x4E\x80\x3C\x0E\xCB\xEE\xA1\x9C\x54"
 
-/* MFVideoFormat_H264  0x34363248-0000-0010-800000AA00389B71 */
+/* MFVideoFormat_H264  34363248-0000-0010-8000-00AA00389B71 */
 #define XR_CODEC_GUID_H264 \
     "\x48\x32\x36\x34\x00\x00\x10\x00\x80\x00\x00\xAA\x00\x38\x9B\x71"
 
-/* CODEC_GUID_JPEG     1BAF4CE6-9EED-430C-869ACB8B37B66237 */
+/* CODEC_GUID_JPEG     1BAF4CE6-9EED-430C-869A-CB8B37B66237 */
 #define XR_CODEC_GUID_JPEG \
     "\xE6\x4C\xAF\x1B\xED\x9E\x0C\x43\x86\x9A\xCB\x8B\x37\xB6\x62\x37"
 
-/* CODEC_GUID_PNG      0E0C858D-28E0-45DB-ADAA0F83E57CC560 */
+/* CODEC_GUID_PNG      0E0C858D-28E0-45DB-ADAA-0F83E57CC560 */
 #define XR_CODEC_GUID_PNG \
     "\x8D\x85\x0C\x0E\xE0\x28\xDB\x45\xAD\xAA\x0F\x83\xE5\x7C\xC5\x60"
+
+/* CODEC_GUID_IGNORE   0C4351A6-3535-42AE-910C-CDFCE5760B58 */
+#define XR_CODEC_GUID_IGNORE \
+    "\xA6\x51\x43\x0C\x35\x35\xAE\x42\x91\x0C\xCD\xFC\xE5\x76\x0B\x58"
 
 /* PDU Types (2.2.8.1.1.1.1) */
 #define PDUTYPE_DEMANDACTIVEPDU        0x1
@@ -547,5 +566,9 @@
 #define RDP_MPPC_RESET                 0x40
 #define RDP_MPPC_FLUSH                 0x80
 #define RDP_MPPC_DICT_SIZE             8192 /* RDP 4.0 | MS-RDPBCGR 3.1.8 */
+
+/* largePointerSupprtFlags (2.2.7.2.7) */
+#define LARGE_POINTER_FLAG_96x96   0x00000001
+#define LARGE_POINTER_FLAG_384x384 0x00000002
 
 #endif /* MS_RDPBCGR_H */

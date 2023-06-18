@@ -110,10 +110,13 @@ CONFIG_HEADER = $(top_builddir)/config_ac.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am_test_common_OBJECTS = test_common-test_common_main.$(OBJEXT) \
+	test_common-test_fifo_calls.$(OBJEXT) \
+	test_common-test_list_calls.$(OBJEXT) \
 	test_common-test_string_calls.$(OBJEXT) \
 	test_common-test_os_calls.$(OBJEXT) \
 	test_common-test_ssl_calls.$(OBJEXT) \
-	test_common-test_base64.$(OBJEXT)
+	test_common-test_base64.$(OBJEXT) \
+	test_common-test_guid.$(OBJEXT)
 test_common_OBJECTS = $(am_test_common_OBJECTS)
 test_common_DEPENDENCIES = $(top_builddir)/common/libcommon.la
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -140,6 +143,9 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/test_common-test_base64.Po \
 	./$(DEPDIR)/test_common-test_common_main.Po \
+	./$(DEPDIR)/test_common-test_fifo_calls.Po \
+	./$(DEPDIR)/test_common-test_guid.Po \
+	./$(DEPDIR)/test_common-test_list_calls.Po \
 	./$(DEPDIR)/test_common-test_os_calls.Po \
 	./$(DEPDIR)/test_common-test_ssl_calls.Po \
 	./$(DEPDIR)/test_common-test_string_calls.Po
@@ -397,6 +403,8 @@ ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
+AUTHMOD_LIB = @AUTHMOD_LIB@
+AUTHMOD_OBJ = @AUTHMOD_OBJ@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -406,10 +414,16 @@ CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CHECK_CFLAGS = @CHECK_CFLAGS@
 CHECK_LIBS = @CHECK_LIBS@
+CMOCKA_CFLAGS = @CMOCKA_CFLAGS@
+CMOCKA_LIBS = @CMOCKA_LIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+CXXDEPMODE = @CXXDEPMODE@
+CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -429,6 +443,8 @@ FGREP = @FGREP@
 FILECMD = @FILECMD@
 FREERDP_CFLAGS = @FREERDP_CFLAGS@
 FREERDP_LIBS = @FREERDP_LIBS@
+FREETYPE2_CFLAGS = @FREETYPE2_CFLAGS@
+FREETYPE2_LIBS = @FREETYPE2_LIBS@
 FUSE_CFLAGS = @FUSE_CFLAGS@
 FUSE_LIBS = @FUSE_LIBS@
 GREP = @GREP@
@@ -483,6 +499,12 @@ TurboJpegIncDir = @TurboJpegIncDir@
 TurboJpegLibDir = @TurboJpegLibDir@
 VERSION = @VERSION@
 XMKMF = @XMKMF@
+XRDP_NVENC_CFLAGS = @XRDP_NVENC_CFLAGS@
+XRDP_NVENC_LIBS = @XRDP_NVENC_LIBS@
+XRDP_X264_CFLAGS = @XRDP_X264_CFLAGS@
+XRDP_X264_LIBS = @XRDP_X264_LIBS@
+XRDP_YAMI_CFLAGS = @XRDP_YAMI_CFLAGS@
+XRDP_YAMI_LIBS = @XRDP_YAMI_LIBS@
 X_CFLAGS = @X_CFLAGS@
 X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_LIBS = @X_LIBS@
@@ -493,6 +515,7 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -528,6 +551,7 @@ mandir = @mandir@
 mkdir_p = @mkdir_p@
 moduledir = @moduledir@
 oldincludedir = @oldincludedir@
+pamconfdir = @pamconfdir@
 pdfdir = @pdfdir@
 pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
@@ -535,6 +559,7 @@ program_transform_name = @program_transform_name@
 psdir = @psdir@
 runstatedir = @runstatedir@
 sbindir = @sbindir@
+sesmanruntimedir = @sesmanruntimedir@
 sharedstatedir = @sharedstatedir@
 socketdir = @socketdir@
 srcdir = @srcdir@
@@ -555,10 +580,13 @@ LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
 test_common_SOURCES = \
     test_common.h \
     test_common_main.c \
+    test_fifo_calls.c \
+    test_list_calls.c \
     test_string_calls.c \
     test_os_calls.c \
     test_ssl_calls.c \
-    test_base64.c
+    test_base64.c \
+    test_guid.c
 
 test_common_CFLAGS = \
     @CHECK_CFLAGS@ \
@@ -623,6 +651,9 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_common-test_base64.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_common-test_common_main.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_common-test_fifo_calls.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_common-test_guid.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_common-test_list_calls.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_common-test_os_calls.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_common-test_ssl_calls.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_common-test_string_calls.Po@am__quote@ # am--include-marker
@@ -667,6 +698,34 @@ test_common-test_common_main.obj: test_common_main.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_common_main.c' object='test_common-test_common_main.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -c -o test_common-test_common_main.obj `if test -f 'test_common_main.c'; then $(CYGPATH_W) 'test_common_main.c'; else $(CYGPATH_W) '$(srcdir)/test_common_main.c'; fi`
+
+test_common-test_fifo_calls.o: test_fifo_calls.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -MT test_common-test_fifo_calls.o -MD -MP -MF $(DEPDIR)/test_common-test_fifo_calls.Tpo -c -o test_common-test_fifo_calls.o `test -f 'test_fifo_calls.c' || echo '$(srcdir)/'`test_fifo_calls.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_common-test_fifo_calls.Tpo $(DEPDIR)/test_common-test_fifo_calls.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_fifo_calls.c' object='test_common-test_fifo_calls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -c -o test_common-test_fifo_calls.o `test -f 'test_fifo_calls.c' || echo '$(srcdir)/'`test_fifo_calls.c
+
+test_common-test_fifo_calls.obj: test_fifo_calls.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -MT test_common-test_fifo_calls.obj -MD -MP -MF $(DEPDIR)/test_common-test_fifo_calls.Tpo -c -o test_common-test_fifo_calls.obj `if test -f 'test_fifo_calls.c'; then $(CYGPATH_W) 'test_fifo_calls.c'; else $(CYGPATH_W) '$(srcdir)/test_fifo_calls.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_common-test_fifo_calls.Tpo $(DEPDIR)/test_common-test_fifo_calls.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_fifo_calls.c' object='test_common-test_fifo_calls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -c -o test_common-test_fifo_calls.obj `if test -f 'test_fifo_calls.c'; then $(CYGPATH_W) 'test_fifo_calls.c'; else $(CYGPATH_W) '$(srcdir)/test_fifo_calls.c'; fi`
+
+test_common-test_list_calls.o: test_list_calls.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -MT test_common-test_list_calls.o -MD -MP -MF $(DEPDIR)/test_common-test_list_calls.Tpo -c -o test_common-test_list_calls.o `test -f 'test_list_calls.c' || echo '$(srcdir)/'`test_list_calls.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_common-test_list_calls.Tpo $(DEPDIR)/test_common-test_list_calls.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_list_calls.c' object='test_common-test_list_calls.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -c -o test_common-test_list_calls.o `test -f 'test_list_calls.c' || echo '$(srcdir)/'`test_list_calls.c
+
+test_common-test_list_calls.obj: test_list_calls.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -MT test_common-test_list_calls.obj -MD -MP -MF $(DEPDIR)/test_common-test_list_calls.Tpo -c -o test_common-test_list_calls.obj `if test -f 'test_list_calls.c'; then $(CYGPATH_W) 'test_list_calls.c'; else $(CYGPATH_W) '$(srcdir)/test_list_calls.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_common-test_list_calls.Tpo $(DEPDIR)/test_common-test_list_calls.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_list_calls.c' object='test_common-test_list_calls.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -c -o test_common-test_list_calls.obj `if test -f 'test_list_calls.c'; then $(CYGPATH_W) 'test_list_calls.c'; else $(CYGPATH_W) '$(srcdir)/test_list_calls.c'; fi`
 
 test_common-test_string_calls.o: test_string_calls.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -MT test_common-test_string_calls.o -MD -MP -MF $(DEPDIR)/test_common-test_string_calls.Tpo -c -o test_common-test_string_calls.o `test -f 'test_string_calls.c' || echo '$(srcdir)/'`test_string_calls.c
@@ -723,6 +782,20 @@ test_common-test_base64.obj: test_base64.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_base64.c' object='test_common-test_base64.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -c -o test_common-test_base64.obj `if test -f 'test_base64.c'; then $(CYGPATH_W) 'test_base64.c'; else $(CYGPATH_W) '$(srcdir)/test_base64.c'; fi`
+
+test_common-test_guid.o: test_guid.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -MT test_common-test_guid.o -MD -MP -MF $(DEPDIR)/test_common-test_guid.Tpo -c -o test_common-test_guid.o `test -f 'test_guid.c' || echo '$(srcdir)/'`test_guid.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_common-test_guid.Tpo $(DEPDIR)/test_common-test_guid.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_guid.c' object='test_common-test_guid.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -c -o test_common-test_guid.o `test -f 'test_guid.c' || echo '$(srcdir)/'`test_guid.c
+
+test_common-test_guid.obj: test_guid.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -MT test_common-test_guid.obj -MD -MP -MF $(DEPDIR)/test_common-test_guid.Tpo -c -o test_common-test_guid.obj `if test -f 'test_guid.c'; then $(CYGPATH_W) 'test_guid.c'; else $(CYGPATH_W) '$(srcdir)/test_guid.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/test_common-test_guid.Tpo $(DEPDIR)/test_common-test_guid.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='test_guid.c' object='test_common-test_guid.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(test_common_CFLAGS) $(CFLAGS) -c -o test_common-test_guid.obj `if test -f 'test_guid.c'; then $(CYGPATH_W) 'test_guid.c'; else $(CYGPATH_W) '$(srcdir)/test_guid.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -1024,6 +1097,9 @@ clean-am: clean-checkPROGRAMS clean-generic clean-libtool \
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/test_common-test_base64.Po
 	-rm -f ./$(DEPDIR)/test_common-test_common_main.Po
+	-rm -f ./$(DEPDIR)/test_common-test_fifo_calls.Po
+	-rm -f ./$(DEPDIR)/test_common-test_guid.Po
+	-rm -f ./$(DEPDIR)/test_common-test_list_calls.Po
 	-rm -f ./$(DEPDIR)/test_common-test_os_calls.Po
 	-rm -f ./$(DEPDIR)/test_common-test_ssl_calls.Po
 	-rm -f ./$(DEPDIR)/test_common-test_string_calls.Po
@@ -1074,6 +1150,9 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/test_common-test_base64.Po
 	-rm -f ./$(DEPDIR)/test_common-test_common_main.Po
+	-rm -f ./$(DEPDIR)/test_common-test_fifo_calls.Po
+	-rm -f ./$(DEPDIR)/test_common-test_guid.Po
+	-rm -f ./$(DEPDIR)/test_common-test_list_calls.Po
 	-rm -f ./$(DEPDIR)/test_common-test_os_calls.Po
 	-rm -f ./$(DEPDIR)/test_common-test_ssl_calls.Po
 	-rm -f ./$(DEPDIR)/test_common-test_string_calls.Po

@@ -21,6 +21,9 @@
 /* Using OpenPAM */
 #undef HAVE_PAM_CONSTANTS_H
 
+/* Define to 1 if you have the `setusercontext' function. */
+#undef HAVE_SETUSERCONTEXT
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 
@@ -75,6 +78,15 @@
 /* Define to the version of this package. */
 #undef PACKAGE_VERSION
 
+/* The size of `int', as computed by sizeof. */
+#undef SIZEOF_INT
+
+/* The size of `long', as computed by sizeof. */
+#undef SIZEOF_LONG
+
+/* The size of `void *', as computed by sizeof. */
+#undef SIZEOF_VOID_P
+
 /* Define to 1 if all of the C90 standard headers exist (not just the ones
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
@@ -88,9 +100,6 @@
 
 /* Compile with imlib2 support */
 #undef USE_IMLIB2
-
-/* Enable PAM */
-#undef USE_PAM
 
 /* Version number of package */
 #undef VERSION

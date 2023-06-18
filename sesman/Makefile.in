@@ -116,25 +116,15 @@ am__installdirs = "$(DESTDIR)$(sbindir)" \
 	"$(DESTDIR)$(sesmansysconfdir)" \
 	"$(DESTDIR)$(sesmansysconfdir)"
 PROGRAMS = $(sbin_PROGRAMS)
-am__xrdp_sesman_SOURCES_DIST = access.c access.h auth.h config.c \
-	config.h env.c env.h scp.c scp.h scp_v0.c scp_v0.h scp_v1.c \
-	scp_v1.h scp_v1_mng.c scp_v1_mng.h sesman.c sesman.h session.c \
-	session.h sig.c sig.h xauth.c xauth.h verify_user_pam.c \
-	verify_user.c verify_user_kerberos.c \
-	verify_user_pam_userpass.c verify_user_bsd.c
-@SESMAN_BSD_FALSE@@SESMAN_KERBEROS_FALSE@@SESMAN_NOPAM_FALSE@@SESMAN_PAMUSERPASS_FALSE@am__objects_1 = verify_user_pam.$(OBJEXT)
-@SESMAN_BSD_FALSE@@SESMAN_KERBEROS_FALSE@@SESMAN_NOPAM_TRUE@@SESMAN_PAMUSERPASS_FALSE@am__objects_1 = verify_user.$(OBJEXT)
-@SESMAN_BSD_FALSE@@SESMAN_KERBEROS_TRUE@@SESMAN_PAMUSERPASS_FALSE@am__objects_1 = verify_user_kerberos.$(OBJEXT)
-@SESMAN_BSD_FALSE@@SESMAN_PAMUSERPASS_TRUE@am__objects_1 = verify_user_pam_userpass.$(OBJEXT)
-@SESMAN_BSD_TRUE@am__objects_1 = verify_user_bsd.$(OBJEXT)
-am_xrdp_sesman_OBJECTS = access.$(OBJEXT) config.$(OBJEXT) \
-	env.$(OBJEXT) scp.$(OBJEXT) scp_v0.$(OBJEXT) scp_v1.$(OBJEXT) \
-	scp_v1_mng.$(OBJEXT) sesman.$(OBJEXT) session.$(OBJEXT) \
-	sig.$(OBJEXT) xauth.$(OBJEXT) $(am__objects_1)
+am_xrdp_sesman_OBJECTS = eicp_process.$(OBJEXT) ercp_process.$(OBJEXT) \
+	lock_uds.$(OBJEXT) pre_session_list.$(OBJEXT) \
+	scp_process.$(OBJEXT) sesman.$(OBJEXT) \
+	sesexec_control.$(OBJEXT) session_list.$(OBJEXT) sig.$(OBJEXT)
 xrdp_sesman_OBJECTS = $(am_xrdp_sesman_OBJECTS)
-am__DEPENDENCIES_1 =
-xrdp_sesman_DEPENDENCIES = $(top_builddir)/common/libcommon.la \
-	$(top_builddir)/sesman/libscp/libscp.la $(am__DEPENDENCIES_1)
+xrdp_sesman_DEPENDENCIES =  \
+	$(top_builddir)/sesman/libsesman/libsesman.la \
+	$(top_builddir)/libipm/libipm.la \
+	$(top_builddir)/common/libcommon.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -182,15 +172,11 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/access.Po ./$(DEPDIR)/config.Po \
-	./$(DEPDIR)/env.Po ./$(DEPDIR)/scp.Po ./$(DEPDIR)/scp_v0.Po \
-	./$(DEPDIR)/scp_v1.Po ./$(DEPDIR)/scp_v1_mng.Po \
-	./$(DEPDIR)/sesman.Po ./$(DEPDIR)/session.Po \
-	./$(DEPDIR)/sig.Po ./$(DEPDIR)/verify_user.Po \
-	./$(DEPDIR)/verify_user_bsd.Po \
-	./$(DEPDIR)/verify_user_kerberos.Po \
-	./$(DEPDIR)/verify_user_pam.Po \
-	./$(DEPDIR)/verify_user_pam_userpass.Po ./$(DEPDIR)/xauth.Po
+am__depfiles_remade = ./$(DEPDIR)/eicp_process.Po \
+	./$(DEPDIR)/ercp_process.Po ./$(DEPDIR)/lock_uds.Po \
+	./$(DEPDIR)/pre_session_list.Po ./$(DEPDIR)/scp_process.Po \
+	./$(DEPDIR)/sesexec_control.Po ./$(DEPDIR)/sesman.Po \
+	./$(DEPDIR)/session_list.Po ./$(DEPDIR)/sig.Po
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -211,7 +197,7 @@ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
 SOURCES = $(xrdp_sesman_SOURCES)
-DIST_SOURCES = $(am__xrdp_sesman_SOURCES_DIST)
+DIST_SOURCES = $(xrdp_sesman_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
 	ctags-recursive dvi-recursive html-recursive info-recursive \
 	install-data-recursive install-dvi-recursive \
@@ -283,6 +269,8 @@ ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
+AUTHMOD_LIB = @AUTHMOD_LIB@
+AUTHMOD_OBJ = @AUTHMOD_OBJ@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -292,10 +280,16 @@ CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
 CHECK_CFLAGS = @CHECK_CFLAGS@
 CHECK_LIBS = @CHECK_LIBS@
+CMOCKA_CFLAGS = @CMOCKA_CFLAGS@
+CMOCKA_LIBS = @CMOCKA_LIBS@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CSCOPE = @CSCOPE@
 CTAGS = @CTAGS@
+CXX = @CXX@
+CXXCPP = @CXXCPP@
+CXXDEPMODE = @CXXDEPMODE@
+CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -315,6 +309,8 @@ FGREP = @FGREP@
 FILECMD = @FILECMD@
 FREERDP_CFLAGS = @FREERDP_CFLAGS@
 FREERDP_LIBS = @FREERDP_LIBS@
+FREETYPE2_CFLAGS = @FREETYPE2_CFLAGS@
+FREETYPE2_LIBS = @FREETYPE2_LIBS@
 FUSE_CFLAGS = @FUSE_CFLAGS@
 FUSE_LIBS = @FUSE_LIBS@
 GREP = @GREP@
@@ -369,6 +365,12 @@ TurboJpegIncDir = @TurboJpegIncDir@
 TurboJpegLibDir = @TurboJpegLibDir@
 VERSION = @VERSION@
 XMKMF = @XMKMF@
+XRDP_NVENC_CFLAGS = @XRDP_NVENC_CFLAGS@
+XRDP_NVENC_LIBS = @XRDP_NVENC_LIBS@
+XRDP_X264_CFLAGS = @XRDP_X264_CFLAGS@
+XRDP_X264_LIBS = @XRDP_X264_LIBS@
+XRDP_YAMI_CFLAGS = @XRDP_YAMI_CFLAGS@
+XRDP_YAMI_LIBS = @XRDP_YAMI_LIBS@
 X_CFLAGS = @X_CFLAGS@
 X_EXTRA_LIBS = @X_EXTRA_LIBS@
 X_LIBS = @X_LIBS@
@@ -379,6 +381,7 @@ abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
 ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_CXX = @ac_ct_CXX@
 ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
@@ -414,6 +417,7 @@ mandir = @mandir@
 mkdir_p = @mkdir_p@
 moduledir = @moduledir@
 oldincludedir = @oldincludedir@
+pamconfdir = @pamconfdir@
 pdfdir = @pdfdir@
 pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
@@ -421,6 +425,7 @@ program_transform_name = @program_transform_name@
 psdir = @psdir@
 runstatedir = @runstatedir@
 sbindir = @sbindir@
+sesmanruntimedir = @sesmanruntimedir@
 sharedstatedir = @sharedstatedir@
 socketdir = @socketdir@
 srcdir = @srcdir@
@@ -435,60 +440,53 @@ EXTRA_DIST = \
   Doxyfile
 
 AM_CPPFLAGS = \
-  -DXRDP_SYSCONF_PATH=\"${sysconfdir}\" \
   -DXRDP_CFG_PATH=\"${sysconfdir}/xrdp\" \
   -DXRDP_SBIN_PATH=\"${sbindir}\" \
-  -DXRDP_SHARE_PATH=\"${datadir}/xrdp\" \
+  -DXRDP_LIBEXEC_PATH=\"${libexecdir}/xrdp\" \
   -DXRDP_PID_PATH=\"${localstatedir}/run\" \
   -DXRDP_SOCKET_PATH=\"${socketdir}\" \
+  -DSESMAN_RUNTIME_PATH=\"${sesmanruntimedir}\" \
+  -I$(top_srcdir)/sesman/libsesman \
   -I$(top_srcdir)/common \
-  -I$(top_srcdir)/sesman/libscp
+  -I$(top_srcdir)/libipm
 
-@SESMAN_BSD_FALSE@@SESMAN_KERBEROS_FALSE@@SESMAN_NOPAM_FALSE@@SESMAN_PAMUSERPASS_FALSE@AUTH_C = verify_user_pam.c
-@SESMAN_BSD_FALSE@@SESMAN_KERBEROS_FALSE@@SESMAN_NOPAM_TRUE@@SESMAN_PAMUSERPASS_FALSE@AUTH_C = verify_user.c
-@SESMAN_BSD_FALSE@@SESMAN_KERBEROS_TRUE@@SESMAN_PAMUSERPASS_FALSE@AUTH_C = verify_user_kerberos.c
-@SESMAN_BSD_FALSE@@SESMAN_PAMUSERPASS_TRUE@AUTH_C = verify_user_pam_userpass.c
-@SESMAN_BSD_TRUE@AUTH_C = verify_user_bsd.c
-@SESMAN_BSD_FALSE@@SESMAN_KERBEROS_FALSE@@SESMAN_NOPAM_FALSE@@SESMAN_PAMUSERPASS_FALSE@AUTH_LIB = -lpam
-@SESMAN_BSD_FALSE@@SESMAN_KERBEROS_FALSE@@SESMAN_NOPAM_TRUE@@SESMAN_PAMUSERPASS_FALSE@AUTH_LIB = -lcrypt
-@SESMAN_BSD_FALSE@@SESMAN_KERBEROS_TRUE@@SESMAN_PAMUSERPASS_FALSE@AUTH_LIB = -lkrb5
-@SESMAN_BSD_FALSE@@SESMAN_PAMUSERPASS_TRUE@AUTH_LIB = -lpam -lpam_userpass
-@SESMAN_BSD_TRUE@AUTH_LIB = 
 xrdp_sesman_SOURCES = \
-  access.c \
-  access.h \
-  auth.h \
-  config.c \
-  config.h \
-  env.c \
-  env.h \
-  scp.c \
-  scp.h \
-  scp_v0.c \
-  scp_v0.h \
-  scp_v1.c \
-  scp_v1.h \
-  scp_v1_mng.c \
-  scp_v1_mng.h \
+  eicp_process.c \
+  eicp_process.h \
+  ercp_process.c \
+  ercp_process.h \
+  lock_uds.c \
+  lock_uds.h \
+  pre_session_list.c \
+  pre_session_list.h \
+  scp_process.c \
+  scp_process.h \
   sesman.c \
   sesman.h \
-  session.c \
-  session.h \
+  sesexec_control.c \
+  sesexec_control.h \
+  session_list.c \
+  session_list.h \
   sig.c \
-  sig.h \
-  xauth.c \
-  xauth.h \
-  $(AUTH_C)
+  sig.h
 
 xrdp_sesman_LDADD = \
-  $(top_builddir)/common/libcommon.la \
-  $(top_builddir)/sesman/libscp/libscp.la \
-  $(AUTH_LIB) \
-  -lpthread
+  $(top_builddir)/sesman/libsesman/libsesman.la \
+  $(top_builddir)/libipm/libipm.la \
+  $(top_builddir)/common/libcommon.la
 
 sesmansysconfdir = $(sysconfdir)/xrdp
+@XRDP_YAMI_FALSE@ldlibrarypath = 
+@XRDP_YAMI_TRUE@ldlibrarypath = LD_LIBRARY_PATH=/opt/yami/lib
+@XRDP_YAMI_FALSE@libvadriverspath = 
+@XRDP_YAMI_TRUE@libvadriverspath = LIBVA_DRIVERS_PATH=/opt/yami/lib/dri
+@XRDP_NVENC_FALSE@xorgconfigfile = xrdp/xorg.conf
+@XRDP_NVENC_TRUE@xorgconfigfile = xrdp/xorg_nvidia.conf
 SUBST_VARS = sed \
-   -e 's|@sesmansysconfdir[@]|$(sesmansysconfdir)|g'
+   -e 's|@sesmansysconfdir[@]|$(sesmansysconfdir)|g' \
+   -e 's|@ldlibrarypath[@]|$(ldlibrarypath)|g' \
+   -e 's|@libvadriverspath[@]|$(libvadriverspath)|g' \
+   -e 's|@xorgconfigfile[@]|$(xorgconfigfile)|g'
 
 subst_verbose = $(subst_verbose_@AM_V@)
 subst_verbose_ = $(subst_verbose_@AM_DEFAULT_V@)
@@ -502,7 +500,8 @@ dist_sesmansysconf_SCRIPTS = \
   reconnectwm.sh
 
 SUBDIRS = \
-  libscp \
+  libsesman \
+  sesexec \
   tools \
   chansrv
 
@@ -634,22 +633,15 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/access.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/config.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/env.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scp.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scp_v0.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scp_v1.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scp_v1_mng.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eicp_process.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ercp_process.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lock_uds.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pre_session_list.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/scp_process.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sesexec_control.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sesman.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/session.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/session_list.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sig.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/verify_user.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/verify_user_bsd.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/verify_user_kerberos.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/verify_user_pam.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/verify_user_pam_userpass.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/xauth.Po@am__quote@ # am--include-marker
 
 $(am__depfiles_remade):
 	@$(MKDIR_P) $(@D)
@@ -905,22 +897,15 @@ clean-am: clean-generic clean-libtool clean-sbinPROGRAMS \
 	mostlyclean-am
 
 distclean: distclean-recursive
-		-rm -f ./$(DEPDIR)/access.Po
-	-rm -f ./$(DEPDIR)/config.Po
-	-rm -f ./$(DEPDIR)/env.Po
-	-rm -f ./$(DEPDIR)/scp.Po
-	-rm -f ./$(DEPDIR)/scp_v0.Po
-	-rm -f ./$(DEPDIR)/scp_v1.Po
-	-rm -f ./$(DEPDIR)/scp_v1_mng.Po
+		-rm -f ./$(DEPDIR)/eicp_process.Po
+	-rm -f ./$(DEPDIR)/ercp_process.Po
+	-rm -f ./$(DEPDIR)/lock_uds.Po
+	-rm -f ./$(DEPDIR)/pre_session_list.Po
+	-rm -f ./$(DEPDIR)/scp_process.Po
+	-rm -f ./$(DEPDIR)/sesexec_control.Po
 	-rm -f ./$(DEPDIR)/sesman.Po
-	-rm -f ./$(DEPDIR)/session.Po
+	-rm -f ./$(DEPDIR)/session_list.Po
 	-rm -f ./$(DEPDIR)/sig.Po
-	-rm -f ./$(DEPDIR)/verify_user.Po
-	-rm -f ./$(DEPDIR)/verify_user_bsd.Po
-	-rm -f ./$(DEPDIR)/verify_user_kerberos.Po
-	-rm -f ./$(DEPDIR)/verify_user_pam.Po
-	-rm -f ./$(DEPDIR)/verify_user_pam_userpass.Po
-	-rm -f ./$(DEPDIR)/xauth.Po
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
@@ -967,22 +952,15 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
-		-rm -f ./$(DEPDIR)/access.Po
-	-rm -f ./$(DEPDIR)/config.Po
-	-rm -f ./$(DEPDIR)/env.Po
-	-rm -f ./$(DEPDIR)/scp.Po
-	-rm -f ./$(DEPDIR)/scp_v0.Po
-	-rm -f ./$(DEPDIR)/scp_v1.Po
-	-rm -f ./$(DEPDIR)/scp_v1_mng.Po
+		-rm -f ./$(DEPDIR)/eicp_process.Po
+	-rm -f ./$(DEPDIR)/ercp_process.Po
+	-rm -f ./$(DEPDIR)/lock_uds.Po
+	-rm -f ./$(DEPDIR)/pre_session_list.Po
+	-rm -f ./$(DEPDIR)/scp_process.Po
+	-rm -f ./$(DEPDIR)/sesexec_control.Po
 	-rm -f ./$(DEPDIR)/sesman.Po
-	-rm -f ./$(DEPDIR)/session.Po
+	-rm -f ./$(DEPDIR)/session_list.Po
 	-rm -f ./$(DEPDIR)/sig.Po
-	-rm -f ./$(DEPDIR)/verify_user.Po
-	-rm -f ./$(DEPDIR)/verify_user_bsd.Po
-	-rm -f ./$(DEPDIR)/verify_user_kerberos.Po
-	-rm -f ./$(DEPDIR)/verify_user_pam.Po
-	-rm -f ./$(DEPDIR)/verify_user_pam_userpass.Po
-	-rm -f ./$(DEPDIR)/xauth.Po
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 

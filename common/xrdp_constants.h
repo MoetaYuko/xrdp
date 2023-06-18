@@ -37,7 +37,22 @@
  * ms-erref.h
  ******************************************************************************/
 
+/**
+ * Size of buffer including terminator for an IP address as returned
+ * by g_sck_get_peer_ip_address(). See POSIX INET6_ADDRSTRLEN
+ */
+#define MAX_PEER_ADDRSTRLEN 46
+
+/**
+ * Size of buffer including terminator for a socket description, as
+ * returned by g_sck_get_peer_description()
+ * Currently the largest is an IPv6 address (INET6_ADDRSTRLEN), plus
+ * []:<port> characters
+ */
+#define MAX_PEER_DESCSTRLEN (46 + 2 + 1 + 5)
+
 #define INFO_CLIENT_NAME_BYTES  32
+
 /**
  * Maximum length of a string including the mandatory null terminator
  * [MS-RDPBCGR] TS_INFO_PACKET(2.2.1.11.1.1)
@@ -232,6 +247,12 @@
 #define BUTTON_STATE_UP   0
 #define BUTTON_STATE_DOWN 1
 
+/* touch gestures */
+#define TOUCH_TWO_FINGERS_DOWN 0
+#define TOUCH_TWO_FINGERS_UP 1
+#define TOUCH_TWO_FINGERS_LEFT 2
+#define TOUCH_TWO_FINGERS_RIGHT 3
+
 /* messages */
 #define WM_PAINT       3
 #define WM_KEYDOWN     15
@@ -255,6 +276,10 @@
 #define WM_BUTTON8DOWN 116
 #define WM_BUTTON9UP   117
 #define WM_BUTTON9DOWN 118
+
+#define WM_TOUCH_VSCROLL 140
+#define WM_TOUCH_HSCROLL 141
+
 #define WM_INVALIDATE  200
 
 #define CB_ITEMCHANGE  300

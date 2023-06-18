@@ -498,6 +498,10 @@ scard_function_establish_context_return(void *user_data,
                   "app_context %d", app_context);
     }
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     out_uint32_le(out_s, app_context);
     out_uint32_le(out_s, status); /* SCARD_S_SUCCESS status */
@@ -564,6 +568,10 @@ scard_function_release_context_return(void *user_data,
     }
     con = uds_client->con;
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     out_uint32_le(out_s, status); /* SCARD_S_SUCCESS status */
     s_mark_end(out_s);
@@ -623,7 +631,6 @@ scard_process_list_readers(struct trans *con, struct stream *in_s)
     {
         LOG(LOG_LEVEL_ERROR, "scard_process_list_readers: "
             "get_pcsc_context_by_app_context failed");
-        g_free(groups);
         return 1;
     }
     pcscListReaders = g_new0(struct pcsc_list_readers, 1);
@@ -723,6 +730,10 @@ scard_function_list_readers_return(void *user_data,
     }
 
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     out_uint32_le(out_s, llen);
     out_uint32_le(out_s, readers);
@@ -826,6 +837,10 @@ scard_function_connect_return(void *user_data,
         }
     }
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     out_uint32_le(out_s, hCard);
     out_uint32_le(out_s, dwActiveProtocol);
@@ -894,6 +909,10 @@ scard_function_disconnect_return(void *user_data,
     }
     con = uds_client->con;
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     out_uint32_le(out_s, status); /* SCARD_S_SUCCESS status */
     s_mark_end(out_s);
@@ -960,6 +979,10 @@ scard_function_begin_transaction_return(void *user_data,
     }
     con = uds_client->con;
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     out_uint32_le(out_s, status); /* SCARD_S_SUCCESS status */
     s_mark_end(out_s);
@@ -1030,6 +1053,10 @@ scard_function_end_transaction_return(void *user_data,
     con = uds_client->con;
 
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     out_uint32_le(out_s, status); /* SCARD_S_SUCCESS status */
     s_mark_end(out_s);
@@ -1179,6 +1206,10 @@ scard_function_transmit_return(void *user_data,
     }
     LOG_DEVEL(LOG_LEVEL_DEBUG, "scard_function_transmit_return: cbRecvLength %d", cbRecvLength);
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     out_uint32_le(out_s, recv_ior.dwProtocol);
     out_uint32_le(out_s, recv_ior.cbPciLength);
@@ -1274,6 +1305,10 @@ scard_function_control_return(void *user_data,
     }
     LOG_DEVEL(LOG_LEVEL_DEBUG, "scard_function_control_return: cbRecvLength %d", cbRecvLength);
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     out_uint32_le(out_s, cbRecvLength);
     out_uint8a(out_s, recvBuf, cbRecvLength);
@@ -1447,6 +1482,10 @@ scard_function_status_return(void *user_data,
               "dwProtocol %d dwState %d name %s",
               dwAtrLen, dwReaderLen, dwProtocol, dwState, lreader_name);
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     dwReaderLen = g_strlen(lreader_name);
     out_uint32_le(out_s, dwReaderLen);
@@ -1560,6 +1599,10 @@ scard_function_get_status_change_return(void *user_data,
     con = uds_client->con;
 
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     if (status != 0)
     {
@@ -1650,6 +1693,10 @@ scard_function_cancel_return(void *user_data,
     }
     con = uds_client->con;
     out_s = trans_get_out_s(con, 8192);
+    if (out_s == NULL)
+    {
+        return 1;
+    }
     s_push_layer(out_s, iso_hdr, 8);
     out_uint32_le(out_s, status); /* SCARD_S_SUCCESS status */
     s_mark_end(out_s);
@@ -1853,6 +1900,8 @@ scard_pcsc_init(void)
     if (g_lis == 0)
     {
         g_lis = trans_create(2, 8192, 8192);
+        // TODO: See #2501. Use needs a way to move PCSCLITE_CSOCK_NAME
+        // to a location not under $HOME.
         home = g_getenv("HOME");
         disp = g_display_num;
         g_snprintf(g_pcsclite_ipc_dir, 255, "%s/.pcsc%d", home, disp);

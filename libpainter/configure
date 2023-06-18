@@ -4473,8 +4473,8 @@ esac
 
 
 
-macro_version='2.4.7'
-macro_revision='2.4.7'
+macro_version='2.4.7.4-1ec8f-dirty'
+macro_revision='2.4.7.4'
 
 
 
@@ -14599,7 +14599,6 @@ See \`config.log' for more details" "$LINENO" 5; }
     cat <<_LT_EOF >> "$cfgfile"
 #! $SHELL
 # Generated automatically by $as_me ($PACKAGE) $VERSION
-# Libtool was configured on host `(hostname || uname -n) 2>/dev/null | sed 1q`:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
 # Provide generalized library-building support services.

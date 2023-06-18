@@ -18,6 +18,9 @@
  * libxup main header file
  */
 
+#ifndef XUP_H
+#define XUP_H
+
 /* include other h files */
 #include "arch.h"
 #include "parse.h"
@@ -70,7 +73,7 @@ struct mod
     int (*server_set_cursor)(struct mod *v, int x, int y, char *data, char *mask);
     int (*server_palette)(struct mod *v, int *palette);
     int (*server_msg)(struct mod *v, const char *msg, int code);
-    int (*server_is_term)(struct mod *v);
+    int (*server_is_term)(void);
     int (*server_set_clip)(struct mod *v, int x, int y, int cx, int cy);
     int (*server_reset_clip)(struct mod *v);
     int (*server_set_fgcolor)(struct mod *v, int fgcolor);
@@ -152,8 +155,12 @@ struct mod
                               int num_crects, short *crects,
                               char *data, int width, int height,
                               int flags, int frame_id);
-
-    tintptr server_dumby[100 - 45]; /* align, 100 minus the number of server
+    int (*server_session_info)(struct mod *v, const char *data,
+                               int data_bytes);
+    int (*server_set_pointer_large)(struct mod *v, int x, int y,
+                                    char *data, char *mask, int bpp,
+                                    int width, int height);
+    tintptr server_dumby[100 - 47]; /* align, 100 minus the number of server
                                      functions above */
     /* common */
     tintptr handle; /* pointer to self as long */
@@ -176,3 +183,5 @@ struct mod
     char *screen_shmem_pixels;
     struct trans *trans;
 };
+
+#endif // XUP_H
