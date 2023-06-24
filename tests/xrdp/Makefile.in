@@ -89,6 +89,11 @@ build_triplet = @build@
 host_triplet = @host@
 TESTS = test_xrdp$(EXEEXT)
 check_PROGRAMS = test_xrdp$(EXEEXT)
+@XRDP_X264_TRUE@am__append_1 = -DXRDP_X264 $(XRDP_X264_CFLAGS)
+@XRDP_X264_TRUE@am__append_2 = \
+@XRDP_X264_TRUE@  $(top_builddir)/xrdp/xrdp_encoder_x264.o \
+@XRDP_X264_TRUE@  $(XRDP_X264_LIBS)
+
 subdir = tests/xrdp
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/ax_append_compile_flags.m4 \
@@ -115,6 +120,10 @@ am_test_xrdp_OBJECTS = test_xrdp-test_xrdp_main.$(OBJEXT) \
 	test_xrdp-test_bitmap_load.$(OBJEXT)
 test_xrdp_OBJECTS = $(am_test_xrdp_OBJECTS)
 am__DEPENDENCIES_1 =
+@XRDP_X264_TRUE@am__DEPENDENCIES_2 =  \
+@XRDP_X264_TRUE@	$(top_builddir)/xrdp/xrdp_encoder_x264.o \
+@XRDP_X264_TRUE@	$(am__DEPENDENCIES_1)
+am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2)
 test_xrdp_DEPENDENCIES = $(top_builddir)/xrdp/xrdp_bitmap_load.o \
 	$(top_builddir)/xrdp/xrdp_bitmap_common.o \
 	$(top_builddir)/xrdp/funcs.o \
@@ -136,7 +145,7 @@ test_xrdp_DEPENDENCIES = $(top_builddir)/xrdp/xrdp_bitmap_load.o \
 	$(top_builddir)/xrdp/xrdp_process.o \
 	$(top_builddir)/xrdp/xrdp_login_wnd.o \
 	$(top_builddir)/xrdp/xrdp_main_utils.o $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_3)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -584,13 +593,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-AM_CPPFLAGS = \
-  -I$(top_builddir) \
-  -I$(top_srcdir)/xrdp \
-  -I$(top_srcdir)/libxrdp \
-  -I$(top_srcdir)/common \
-  $(IMLIB2_CFLAGS)
-
+AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)/xrdp \
+	-I$(top_srcdir)/libxrdp -I$(top_srcdir)/common \
+	$(IMLIB2_CFLAGS) $(am__append_1)
 LOG_DRIVER = env AM_TAP_AWK='$(AWK)' $(SHELL) \
                   $(top_srcdir)/tap-driver.sh
 
@@ -604,6 +609,7 @@ EXTRA_DIST = \
   test1.jpg \
   test_alpha_blend.png
 
+XRDP_EXTRA_LIBS = $(am__append_2)
 test_xrdp_SOURCES = \
     test_xrdp.h \
     test_xrdp_main.c \
@@ -644,6 +650,7 @@ test_xrdp_LDADD = \
     $(top_builddir)/xrdp/xrdp_main_utils.o \
     $(PIXMAN_LIBS) \
     $(IMLIB2_LIBS) \
+    $(XRDP_EXTRA_LIBS) \
     @CHECK_LIBS@ \
     @CMOCKA_LIBS@
 
