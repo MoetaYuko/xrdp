@@ -9,7 +9,7 @@ Forwarded: https://github.com/neutrinolabs/xorgxrdp/pull/16
 
 --- a/common/os_calls.c
 +++ b/common/os_calls.c
-@@ -127,7 +127,7 @@ g_mk_socket_path(const char *app_name)
+@@ -152,7 +152,7 @@
                  return 1;
              }
          }

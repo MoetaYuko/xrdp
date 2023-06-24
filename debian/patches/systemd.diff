@@ -4,24 +4,20 @@ Forwarded: https://github.com/neutrinolabs/xrdp/pull/646
 
 --- a/instfiles/xrdp-sesman.service.in
 +++ b/instfiles/xrdp-sesman.service.in
-@@ -7,7 +7,8 @@ BindsTo=xrdp.service
+@@ -7,6 +7,7 @@
  
  [Service]
- Type=forking
--PIDFile=@localstatedir@/run/xrdp-sesman.pid
-+PIDFile=@localstatedir@/run/xrdp/xrdp-sesman.pid
+ Type=exec
 +RuntimeDirectory=xrdp
  EnvironmentFile=-@sysconfdir@/sysconfig/xrdp
  EnvironmentFile=-@sysconfdir@/default/xrdp
- ExecStart=@sbindir@/xrdp-sesman $SESMAN_OPTIONS
+ ExecStart=@sbindir@/xrdp-sesman $SESMAN_OPTIONS --nodaemon
 --- a/instfiles/xrdp.service.in
 +++ b/instfiles/xrdp.service.in
-@@ -6,9 +6,14 @@ After=network.target xrdp-sesman.service
+@@ -6,8 +6,13 @@
  
  [Service]
- Type=forking
--PIDFile=@localstatedir@/run/xrdp.pid
-+PIDFile=@localstatedir@/run/xrdp/xrdp.pid
+ Type=exec
 +RuntimeDirectory=xrdp
  EnvironmentFile=-@sysconfdir@/sysconfig/xrdp
  EnvironmentFile=-@sysconfdir@/default/xrdp
@@ -29,6 +25,6 @@ Forwarded: https://github.com/neutrinolabs/xrdp/pull/646
 +Group=xrdp
 +PermissionsStartOnly=true
 +ExecStartPre=/bin/sh /usr/share/xrdp/socksetup
- ExecStart=@sbindir@/xrdp $XRDP_OPTIONS
- ExecStop=@sbindir@/xrdp $XRDP_OPTIONS --kill
+ ExecStart=@sbindir@/xrdp $XRDP_OPTIONS --nodaemon
  
+ [Install]

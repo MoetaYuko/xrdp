@@ -9,7 +9,7 @@ Subject: Use absolute path to PulseAudio modules
 
 --- a/instfiles/pulse/default.pa
 +++ b/instfiles/pulse/default.pa
-@@ -8,5 +8,11 @@ load-module module-xrdp-sink
+@@ -8,5 +8,11 @@
  .ifexists module-xrdp-source.so
  load-module module-xrdp-source
  .endif
