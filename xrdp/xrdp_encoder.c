@@ -331,7 +331,7 @@ process_enc_jpg(struct xrdp_encoder *self, XRDP_ENC_DATA *enc)
 
         out_data_bytes = MAX((cx + 4) * cy * 4, 8192);
         if ((out_data_bytes < 1)
-            || (out_data_bytes > OUT_DATA_BYTES_DEFAULT_SIZE))
+                || (out_data_bytes > OUT_DATA_BYTES_DEFAULT_SIZE))
         {
             LOG_DEVEL(LOG_LEVEL_ERROR, "process_enc_jpg: error 2");
             return 1;
@@ -689,7 +689,7 @@ process_enc_h264(struct xrdp_encoder *self, XRDP_ENC_DATA *enc)
 #endif
         /* RFX_AVC420_METABLOCK */
         comp_bytes_pre = build_rfx_avc420_metablock(s, rrects, rcount,
-                                                    scr_width, scr_height);
+                         scr_width, scr_height);
         enc_done_flags = 1;
     }
     else
@@ -762,7 +762,7 @@ process_enc_h264(struct xrdp_encoder *self, XRDP_ENC_DATA *enc)
     /* chroma 444 */
     /* RFX_AVC420_METABLOCK */
     comp_bytes_pre1 = build_rfx_avc420_metablock(s, rrects, rcount,
-                                                 scr_width, scr_height);
+                      scr_width, scr_height);
     out_data_bytes1 = OUT_DATA_BYTES_DEFAULT_SIZE;
     error = xrdp_encoder_x264_encode(self->codec_handle, 0,
                                      enc->width, enc->height, 0,
@@ -805,9 +805,9 @@ process_enc_h264(struct xrdp_encoder *self, XRDP_ENC_DATA *enc)
     }
 #if XRDP_AVC444
     enc_done->comp_bytes = 4 + comp_bytes_pre
-        + out_data_bytes
-        + comp_bytes_pre1
-        + out_data_bytes1;
+                           + out_data_bytes
+                           + comp_bytes_pre1
+                           + out_data_bytes1;
 #else
     enc_done->comp_bytes = comp_bytes_pre + out_data_bytes;
 #endif

@@ -27,7 +27,7 @@
 
 #include <epoxy/gl.h>
 
-#include "encoder_headers/nvEncodeAPI_11_0.h"
+#include "encoder_headers/nvEncodeAPI_12_1_14.h"
 
 #include "arch.h"
 #include "os_calls.h"
