@@ -164,7 +164,7 @@ MAIN VIEW - NV12
     TODO: This appears to be identical to g_fs_rgb_to_yuv420.
     Keeping this now because this is a dev prototype, but we might
     want to remove this in the future.
-*/ 
+*/
 static const GLchar g_fs_rgb_to_yuv420_mv[] = "\
 uniform sampler2D tex;\n\
 uniform vec2 tex_size;\n\

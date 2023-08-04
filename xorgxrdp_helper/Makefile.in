@@ -91,7 +91,7 @@ host_triplet = @host@
 @XRDP_NVENC_TRUE@am__append_1 = -DXRDP_NVENC $(XRDP_NVENC_CFLAGS)
 @XRDP_NVENC_TRUE@am__append_2 = $(XRDP_NVENC_LIBS)
 @XRDP_NVENC_TRUE@am__append_3 = xorgxrdp_helper_nvenc.c xorgxrdp_helper_nvenc.h \
-@XRDP_NVENC_TRUE@encoder_headers/nvEncodeAPI_11_0.h encoder_headers/nvEncodeAPI_11_1.h
+@XRDP_NVENC_TRUE@encoder_headers/nvEncodeAPI_12_1_14.h
 
 @XRDP_YAMI_TRUE@am__append_4 = -DXRDP_YAMI $(XRDP_YAMI_CFLAGS)
 @XRDP_YAMI_TRUE@am__append_5 = $(XRDP_YAMI_LIBS)
@@ -124,8 +124,7 @@ am__xorgxrdp_helper_SOURCES_DIST = xorgxrdp_helper.c xorgxrdp_helper.h \
 	xorgxrdp_helper_egl.c xorgxrdp_helper_egl.h \
 	xorgxrdp_helper_glx.c xorgxrdp_helper_glx.h \
 	xorgxrdp_helper_nvenc.c xorgxrdp_helper_nvenc.h \
-	encoder_headers/nvEncodeAPI_11_0.h \
-	encoder_headers/nvEncodeAPI_11_1.h xorgxrdp_helper_yami.c \
+	encoder_headers/nvEncodeAPI_12_1_14.h xorgxrdp_helper_yami.c \
 	xorgxrdp_helper_yami.h encoder_headers/yami_inf.h
 @XRDP_NVENC_TRUE@am__objects_1 = xorgxrdp_helper_nvenc.$(OBJEXT)
 @XRDP_YAMI_TRUE@am__objects_2 = xorgxrdp_helper_yami.$(OBJEXT)

@@ -217,7 +217,8 @@ struct xrdp_client_info
     int gfx;
 };
 
-enum xrdp_encoder_flags {
+enum xrdp_encoder_flags
+{
     NONE                                   = 0,
     ENCODE_COMPLETE                        = 1 << 0,
     CONTAINS_DUAL_FRAME_AVC444             = 1 << 1,
