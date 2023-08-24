@@ -365,15 +365,15 @@ xorgxrdp_helper_x11_init(void)
         glUseProgram(g_si[index].program);
         if (g_si[index].ymath_loc >= 0)
         {
-            glUniform4fv(g_si[index].ymath_loc, 1, g_rgb2yux_matrix[0].ymath);
+            glUniform4fv(g_si[index].ymath_loc, 1, g_rgb2yux_matrix[1].ymath);
         }
         if (g_si[index].umath_loc >= 0)
         {
-            glUniform4fv(g_si[index].umath_loc, 1, g_rgb2yux_matrix[0].umath);
+            glUniform4fv(g_si[index].umath_loc, 1, g_rgb2yux_matrix[1].umath);
         }
         if (g_si[index].vmath_loc >= 0)
         {
-            glUniform4fv(g_si[index].vmath_loc, 1, g_rgb2yux_matrix[0].vmath);
+            glUniform4fv(g_si[index].vmath_loc, 1, g_rgb2yux_matrix[1].vmath);
         }
         glUseProgram(0);
     }

@@ -21,20 +21,26 @@
  * xorgxrdp_helper_x11.c */
 
 static const GLchar g_vs[] = "\
-attribute vec4 position;\n\
+#version 460 core\n\
+layout(location = 0) in vec4 position;\n\
+out vec4 gl_Position;\n\
 void main(void)\n\
 {\n\
     gl_Position = vec4(position.xy, 0.0, 1.0);\n\
 }\n";
 
 static const GLchar g_fs_copy[] = "\
+#version 460 core\n\
 uniform sampler2D tex;\n\
 uniform vec2 tex_size;\n\
+out texture gl_FragColor;\n\
 void main(void)\n\
 {\n\
-    gl_FragColor = texture2D(tex, gl_FragCoord.xy / tex_size);\n\
+    gl_FragColor = texture(tex, gl_FragCoord.xy / tex_size);\n\
 }\n";
 
+/*
+Original version.
 static const GLchar g_fs_rgb_to_yuv420[] = "\
 uniform sampler2D tex;\n\
 uniform vec2 tex_size;\n\
@@ -81,6 +87,50 @@ void main(void)\n\
             gl_FragColor = pix;\n\
         }\n\
     }\n\
+}\n";
+*/
+
+// Optimized version.
+static const GLchar g_fs_rgb_to_yuv420[] = "\
+#version 460 core\n\
+uniform sampler2D tex;\n\
+uniform vec2 tex_size;\n\
+uniform vec4 ymath;\n\
+uniform vec4 umath;\n\
+uniform vec4 vmath;\n\
+out vec4 FragColor;\n\
+void main()\n\
+{\n\
+    vec4 pix;\n\
+    float x = gl_FragCoord.x;\n\
+    float y = gl_FragCoord.y;\n\
+    if (y < tex_size.y)\n\
+    {\n\
+        pix = texture(tex, vec2(x, y) / tex_size);\n\
+        pix.a = 1.0;\n\
+        pix.r = clamp(dot(ymath, pix), 0.0, 1.0);\n\
+    }\n\
+    else\n\
+    {\n\
+        y = floor(y - tex_size.y) * 2.0 + 0.5;\n\
+        float xOffset = mod(x, 2.0);\n\
+        float antiAliasMod = xOffset == 0 ? 1.0 : -1.0;\n\
+        pix = texture(tex, vec2(x - xOffset, y) / tex_size);\n\
+        pix += texture(tex, vec2(x - xOffset + antiAliasMod, y) / tex_size);\n\
+        pix += texture(tex, vec2(x - xOffset, y + 1.0) / tex_size);\n\
+        pix += texture(tex, vec2(x - xOffset + antiAliasMod, y + 1.0) / tex_size);\n\
+        pix /= 4.0;\n\
+        pix.a = 1.0;\n\
+        if (xOffset < 1.0)\n\
+        {\n\
+            pix.r = clamp(dot(umath, pix), 0.0, 1.0);\n\
+        }\n\
+        else\n\
+        {\n\
+            pix.r = clamp(dot(vmath, pix), 0.0, 1.0);\n\
+        }\n\
+    }\n\
+    FragColor = vec4(pix.r, 0.0, 0.0, 1.0);\n\
 }\n";
 
 static const GLchar g_fs_rgb_to_yuv422[] = "\

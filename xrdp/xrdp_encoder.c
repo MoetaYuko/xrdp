@@ -582,6 +582,14 @@ build_rfx_avc420_metablock(struct stream *s, short *rrects, int rcount,
     int x, y, cx, cy;
     int location;
     struct enc_rect rect;
+    const uint8_t qp = 22; // Default set by Microsoft.
+    const uint8_t r = 0; // Required to be 0.
+    const uint8_t p = 0; // Progressively encoded flag.
+    int qpVal = 0;
+    qpVal |= qp & 0x3F;
+    qpVal |= (r & 1) << 6;
+    qpVal |= (p & 1) << 7;
+
     out_uint32_le(s, rcount); /* numRegionRects */
     for (index = 0; index < rcount; index++)
     {
@@ -602,8 +610,9 @@ build_rfx_avc420_metablock(struct stream *s, short *rrects, int rcount,
     }
     for (index = 0; index < rcount; index++)
     {
-        out_uint8(s, 23); /* qp */
-        out_uint8(s, 100); /* quality level 0..100 */
+        // 2.2.4.4.2 RDPGFX_AVC420_QUANT_QUALITY
+        out_uint8(s, qpVal); /* qp */
+        out_uint8(s, 100); /* quality level 0..100 (Microsoft uses 100) */
     }
     int comp_bytes_pre = 4 + rcount * 8 + rcount * 2;
     return comp_bytes_pre;
